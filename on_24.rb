@@ -1439,7 +1439,7 @@
           optional: false,
           control_type: 'select',
           pick_list: :search_records_object_list,
-          hint: 'Select any On24 object, e.g. Registrant'
+          hint: 'Select any ON24 object, e.g. Registrant'
         }
       ],
       input_fields: lambda do |object_definitions|
@@ -1480,7 +1480,7 @@
           optional: false,
           control_type: 'select',
           pick_list: :get_records_object_list,
-          hint: 'Select any On24 object, e.g. Registrant'
+          hint: 'Select any ON24 object, e.g. Registrant'
         }
       ],
       input_fields: lambda do |object_definitions|
@@ -1761,7 +1761,7 @@
           optional: false,
           control_type: 'select',
           pick_list: :trigger_object_list,
-          hint: 'Select any On24 object, e.g. Registrant'
+          hint: 'Select any ON24 object, e.g. Registrant'
         }
       ],
       input_fields: lambda do |object_definitions|
@@ -1833,7 +1833,7 @@
           optional: false,
           control_type: 'select',
           pick_list: :object_list,
-          hint: 'Select any On24 object, e.g. Registrant'
+          hint: 'Select any ON24 object, e.g. Registrant'
         }
       ],
       input_fields: lambda do |object_definitions|
