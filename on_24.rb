@@ -976,32 +976,23 @@
     lead_trigger_output: lambda do |_input|
       call('lead_schema', '')
     end,
-    search_execute: lambda do |input|
-      if input['object'] == 'event_registrant'
-        get("event/#{input['eventId']}/registrant", input)
+    execute_url: lambda do |input|
+      if input['object'] == 'registrant' && input['eventId'].present? ||
+         input['object'] == 'event_registrant'
+        "event/#{input['eventId']}/registrant"
       elsif input['object'] == 'event_attendee'
-        get("event/#{input['eventId']}/attendee", input)
+        "event/#{input['eventId']}/attendee"
+      elsif input['email'].present? ||
+            input['object'] == 'event' && input['eventId'].present?
+        "#{input['object']}/#{input['email'] || input['eventId']}"
       else
-        get(input['object'], input)
-      end
-    end,
-    create_execute: lambda do |input|
-      if input['object'] == 'event'
-        post('event')
-      else
-        post("event/#{input['eventId']}/registrant")
-      end
-    end,
-    update_execute: lambda do |input|
-      if input['object'] == 'event'
-        put("event/#{input['eventId']}")
-      else
-        patch("registrant/#{input['email']}")
+        input['object']
       end
     end,
     trigger_url: lambda do |input|
       if input['object'] == 'event'
-        get('event?dateFilterMode=creation')
+        get('event?dateFilterMode=creation&filterOrder=asc&
+             includesubaccounts=Y')
       else
         get(input['object'])
       end
@@ -1455,7 +1446,7 @@
         object_definitions['search_input']
       end,
       execute: lambda do |_connection, input|
-        response = call('search_execute', input)&.
+        response = get(call('execute_url', input), input.except('object'))&.
         after_error_response(/.*/) do |code, _body, _header, message|
           error("#{code}: #{message}")
         end
@@ -1496,11 +1487,11 @@
         object_definitions['get_input']
       end,
       execute: lambda do |_connection, input|
-        response =
-          get("#{input['object']}/#{input['eventId'] || input['email']}")&.
-          after_error_response(/.*/) do |code, _body, _header, message|
-            error(" #{code}: #{message}")
-          end
+        response = get(call('execute_url', input), input.
+          except('eventId', 'email', 'object'))&.
+        after_error_response(/.*/) do |code, _body, _header, message|
+          error(" #{code}: #{message}")
+        end
         response[input['object']] || response
         call('format_response_data', response.presence)
       end,
@@ -1528,7 +1519,7 @@
         if object_list['object'] == 'Registrant'
           'If a field is configured as "required" on the registration page,' \
           ' you must pass in a valid value, or the request will not be' \
-          ' successful. Note: Only for Registrant'
+          ' successful.'
         end
       end,
       config_fields: [
@@ -1537,14 +1528,15 @@
           optional: false,
           control_type: 'select',
           pick_list: :object_list,
-          hint: 'Select any On24 object, e.g. Registrant'
+          hint: 'Select any ON24 object, e.g. Registrant'
         }
       ],
       input_fields: lambda do |object_definitions|
         object_definitions['create_input']
       end,
       execute: lambda do |_connection, input|
-        response = call('create_execute', input).payload(input).
+        response = post(call('execute_url', input)).
+                   payload(input.except('object', 'eventId')).
                    request_format_www_form_urlencoded&.
           after_error_response(/.*/) do |code, _body, _header, message|
             error("#{code}: #{message}")
@@ -1578,14 +1570,19 @@
           optional: false,
           control_type: 'select',
           pick_list: :object_list,
-          hint: 'Select any On24 object, e.g. Registrant'
+          hint: 'Select any ON24 object, e.g. Registrant'
         }
       ],
       input_fields: lambda do |object_definitions|
         object_definitions['update_input']
       end,
       execute: lambda do |_connection, input|
-        response = call('update_execute', input).payload(input).
+        response = if input['object'] == 'registrant'
+                     patch(call('execute_url', input))
+                   else
+                     put(call('execute_url', input))
+                   end
+        response = response.payload(input.except('object', 'email', 'eventId')).
                    request_format_www_form_urlencoded&.
           after_error_response(/.*/) do |code, _body, _header, message|
             error("#{code}: #{message}")
@@ -1764,7 +1761,7 @@
           optional: false,
           control_type: 'select',
           pick_list: :trigger_object_list,
-          hint: 'Select the object from list.'
+          hint: 'Select any On24 object, e.g. Registrant'
         }
       ],
       input_fields: lambda do |object_definitions|
@@ -1772,21 +1769,34 @@
       end,
       poll: lambda do |_connection, input, closure|
         closure ||= {}
-        limit = 50
+        limit = if input['object'] == 'lead'
+                  50
+                else
+                  100
+                end
         page_off_set = closure['page_off_set'] || 0
         date_created = closure['date_created'] || input['since'] || 1.hour.ago
         response = call('trigger_url', '').
                    params(itemsPerPage: limit,
                           startDate: date_created,
-                          filterOrder: 'asc',
-                          includesubaccounts: 'Y',
                           pageOffset: page_off_set)
         records = response[input['object'].pluralize]
         closure = if (has_more = records&.size&. >= limit)
-                    { 'page_off_set': page_off_set + 1 }
+                    if input['object'] == 'lead'
+                      { 'date_created': Time.now,
+                        'page_off_set': page_off_set + 1 }
+                    else
+                      { 'date_created': records&.dig(-1, 'createtimestamp') ||
+                        date_created, 'page_off_set': page_off_set + 1 }
+                    end
                   else
-                    { 'date_created': records&.dig(-1, 'createtimestamp') ||
-                      date_created, 'page_off_set': 0 }
+                    if input['object'] == 'lead'
+                      { 'date_created': Time.now,
+                        'page_off_set': 0 }
+                    else
+                      { 'date_created': records&.dig(-1, 'createtimestamp') ||
+                        date_created, 'page_off_set': 0 }
+                    end
                   end
         {
           events: records,
@@ -1823,7 +1833,7 @@
           optional: false,
           control_type: 'select',
           pick_list: :object_list,
-          hint: 'Select the object from list.'
+          hint: 'Select any On24 object, e.g. Registrant'
         }
       ],
       input_fields: lambda do |object_definitions|
@@ -1842,7 +1852,9 @@
                           pageOffset: page_off_set)
         records = response[input['object'].pluralize]
         closure = if (has_more = records&.size&. >= limit)
-                    { 'page_off_set': page_off_set + 1 }
+                    { 'date_updated': records&.dig(-1, 'lastmodified') ||
+                      records&.dig(-1, 'lastactivity'),
+                      'page_off_set': page_off_set + 1 }
                   else
                     { 'date_updated': records&.dig(-1, 'lastmodified') ||
                       records&.dig(-1, 'lastactivity') ||
