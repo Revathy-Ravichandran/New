@@ -6,10 +6,10 @@
     [
       {
         name: 'clientId',
-        label: 'Client_id',
+        label: 'Client ID',
         optional: false,
         hint: "Click <a href='https://wcc.on24.com/webcast/apitokensdashboard'"\
-          " target='_blank'>here</a> to find client id"
+          " target='_blank'>here</a> to get client id"
       },
       {
         name: 'accessTokenKey',
@@ -26,8 +26,7 @@
     authorization: {
       apply: lambda do |connection|
         headers('accessTokenKey': connection['accessTokenKey'],
-                'accessTokenSecret': connection['accessTokenSecret'],
-                'content-type': 'application/x-www-form-urlencoded')
+                'accessTokenSecret': connection['accessTokenSecret'])
       end
     },
     base_uri: lambda do |connection|
@@ -42,12 +41,14 @@
   {
     event_management_schema: lambda do |_input|
       [
-        { name: 'eventId', type: 'integer' },
-        { name: 'title', hint: "Event's name. Limited to less than" \
-            ' 251 characters' },
-        { name: 'eventAbstract', hint: "Event's description or summary" },
-        { name: 'promotionalSummary' },
+        { name: 'eventId', type: 'integer', label: 'Event Id' },
+        { name: 'title',
+          hint: "Event's name. Limited to less than 251 characters" },
+        { name: 'eventAbstract', hint: "Event's description or summary",
+          label: 'Event abstract' },
+        { name: 'promotionalSummary', label: 'Promotional summary' },
         { name: 'liveStart', type: 'date_time', hint: "Event's start date.",
+          label: 'Live start',
           render_input: lambda do |field|
             field&.to_s
           end,
@@ -56,27 +57,29 @@
           end },
         { name: 'liveDuration', hint: 'LiveDuration value in 15 minute' \
             ' increments (e.g. 15, 30, 45, 60, etc.) up to 120 minutes. Above' \
-            ' 120 minutes, increments will be 30 minutes up to 480 minutes.' },
-        { name: 'liveEnd', type: 'date_time',
+            ' 120 minutes, increments will be 30 minutes up to 480 minutes.',
+          label: 'Live duration' },
+        { name: 'liveEnd', type: 'date_time', label: 'Live end',
           parse_output: lambda do |field|
             field&.to_s
           end },
-        { name: 'archiveStart', type: 'date_time',
+        { name: 'archiveStart', type: 'date_time', label: 'Archive start',
           parse_output: lambda do |field|
             field&.to_s
           end },
-        { name: 'archiveEnd', type: 'date_time',
+        { name: 'archiveEnd', type: 'date_time', label: 'Archive end',
           parse_output: lambda do |field|
             field&.to_s
           end },
-        { name: 'clientId', type: 'integer' },
+        { name: 'clientId', type: 'integer', label: 'Client Id' },
         { name: 'timeZone', control_type: 'select',
-          pick_list: :Time_zones,
+          pick_list: :time_zones,
+          label: 'Time zone',
           toggle_hint: 'Select from list',
           type: 'string',
           toggle_field: {
             name: 'timeZone',
-            label: 'Time_zone',
+            label: 'Time zone',
             optional: true,
             type: 'string',
             control_type: 'text',
@@ -84,63 +87,75 @@
             hint: 'Allowed values, E.g. Etc/GMT+12, Pacific/Midway'
           } },
         { name: 'eventType', control_type: 'select',
-          pick_list: :Event_types,
+          pick_list: :event_types,
           type: 'string',
+          label: 'Event type',
           toggle_hint: 'Select from list',
           toggle_field:
           {
             name: 'eventType',
-            label: 'Event_type',
+            label: 'Event type',
             optional: true,
             type: 'string',
             control_type: 'text',
             toggle_hint: 'Use custom value',
             hint: 'Allowed values, E.g. fav, simulive, ondemand'
           } },
-        { name: 'goodAfter', type: 'date_time',
+        { name: 'goodAfter', type: 'date_time', label: 'Good after',
           parse_output: lambda do |field|
             field&.to_s
           end },
-        { name: 'dialInNumber' },
-        { name: 'bridgeDialInNumber' },
-        { name: 'dialInPasscode' },
-        { name: 'audienceUrl', label: 'Audience_URL' },
-        { name: 'reportsUrl', label: 'Reports_URL' },
-        { name: 'previewUrl', label: 'Preview_URL' },
-        { name: 'archiveDuration', type: 'integer' },
-        { name: 'shortTimeZone' },
-        { name: 'isLiveStartPast', type: 'boolean' },
-        { name: 'isLiveEndPast', type: 'boolean' },
-        { name: 'archiveEndInPast', type: 'boolean' },
-        { name: 'monthsAvailableToExtend', type: 'integer' },
-        { name: 'canExtendArchive', type: 'boolean' },
+        { name: 'dialInNumber', label: 'Dial in number' },
+        { name: 'bridgeDialInNumber', label: 'Bridge dial-in number' },
+        { name: 'dialInPasscode', label: 'Dial-in passcode' },
+        { name: 'audienceUrl', label: 'Audience URL' },
+        { name: 'reportsUrl', label: 'Reports URL' },
+        { name: 'previewUrl', label: 'Preview URL' },
+        { name: 'archiveDuration', type: 'integer', label: 'Archive duration' },
+        { name: 'shortTimeZone', label: 'Short time zone' },
+        { name: 'isLiveStartPast', type: 'boolean',
+          label: 'Is live start past' },
+        { name: 'isLiveEndPast', type: 'boolean', label: 'Is live end past' },
+        { name: 'archiveEndInPast', type: 'boolean',
+          label: 'Archive end in past' },
+        { name: 'monthsAvailableToExtend', type: 'integer',
+          label: 'Months available to extend' },
+        { name: 'canExtendArchive', type: 'boolean',
+          label: 'Can extend archive' },
         { name: 'archiveAvailable', control_type: 'select',
           pick_list: :boolean_list,
           type: 'string',
+          label: 'Archive available',
           hint: 'Indicates if the Archive Option is Enabled or Disabled for' \
             ' this event',
           toggle_hint: 'Select from list',
           toggle_field: {
             name: 'archiveAvailable',
-            label: 'Archive_available',
+            label: 'Archive available',
             optional: true,
             type: 'string',
             control_type: 'text',
             toggle_hint: 'Use custom value',
             hint: 'Allowed values are Y,N'
           } },
-        { name: 'autoArchiveProcessed', type: 'boolean' },
-        { name: 'canManipulateArchive', type: 'boolean' },
-        { name: 'canToggleArchiveAvailability', type: 'boolean' },
-        { name: 'showFaaBridgeNumber', type: 'boolean' },
-        { name: 'showColossusLink', type: 'boolean' },
+        { name: 'autoArchiveProcessed', type: 'boolean',
+          label: 'Auto archive processed' },
+        { name: 'canManipulateArchive', type: 'boolean',
+          label: 'Can manipulate archive' },
+        { name: 'canToggleArchiveAvailability', type: 'boolean',
+          label: 'Can toggle archive availability' },
+        { name: 'showFaaBridgeNumber', type: 'boolean',
+          label: 'Show faa bridge number' },
+        { name: 'showColossusLink', type: 'boolean',
+          label: 'Show colossus link' },
         { name: 'languageCd', control_type: 'select',
           pick_list: :languages,
           type: 'string',
+          label: 'Language code',
           toggle_hint: 'Select from list',
           toggle_field: {
             name: 'languageCd',
-            label: 'Language_code',
+            label: 'Language code',
             optional: true,
             type: 'string',
             control_type: 'text',
@@ -150,84 +165,92 @@
         { name: 'countrycd', control_type: 'select',
           pick_list: :country,
           type: 'string',
+          label: 'Country code',
           toggle_hint: 'Select from list',
           toggle_field: {
             name: 'countrycd',
-            label: 'Country_code',
+            label: 'Country code',
             optional: true,
             type: 'string',
             control_type: 'text',
             toggle_hint: 'Use custom value',
             hint: 'Allowed values are CN, UK, TW'
           } },
-        { name: 'campaignCode' },
-        { name: 'sourceEventId', type: 'integer' },
-        { name: 'rolloverAudio', type: 'boolean' },
-        { name: 'rolloverAudioDisabled', type: 'boolean' },
+        { name: 'campaignCode', label: 'Campaign code' },
+        { name: 'sourceEventId', type: 'integer', label: 'Source event Id' },
+        { name: 'rolloverAudio', type: 'boolean', label: 'Roll over audio' },
+        { name: 'rolloverAudioDisabled', type: 'boolean',
+          label: 'Roll over audio disabled' },
         { name: 'tags', type: 'array', of: 'object', properties: [
           { name: '__name', label: 'Name' }
         ] },
-        { name: 'customaccounttags', type: 'array', of: 'object',
+        { name: 'customaccounttags', label: 'Custom account tags',
+          type: 'array', of: 'object',
           properties: [
             { name: 'groupid', type: 'integer' },
             { name: 'groupname' },
             { name: 'tagid', type: 'integer' },
             { name: 'tagname' }
           ] },
-        { name: 'defaultPlayerConsoleTemplateId', type: 'integer' },
-        { name: 'simuliveWaitingMode', type: 'boolean' },
-        { name: 'pmurl', label: 'Pm_URL' },
-        { name: 'simuliveEPMode', type: 'boolean' },
-        { name: 'simuliveMode', type: 'boolean' }
+        { name: 'defaultPlayerConsoleTemplateId', type: 'integer',
+          label: 'Default player console template Id' },
+        { name: 'simuliveWaitingMode', type: 'boolean',
+          label: 'Simu live waiting mode' },
+        { name: 'pmurl', label: 'Pm URL' },
+        { name: 'simuliveEPMode', type: 'boolean', label: 'Simu live EP mode' },
+        { name: 'simuliveMode', type: 'boolean', label: 'Simu live mode' }
       ]
     end,
     event_level_schema: lambda do |_input|
       [
-        { name: 'eventid', type: 'integer' },
-        { name: 'eventname' },
-        { name: 'clientid', type: 'integer' },
-        { name: 'eventduration', type: 'integer' },
-        { name: 'goodafter', type: 'date_time' },
-        { name: 'isactive', type: 'boolean' },
-        { name: 'goodtill' },
-        { name: 'regrequired', type: 'boolean' },
+        { name: 'eventid', type: 'integer', label: 'Event Id' },
+        { name: 'eventname', label: 'Event name' },
+        { name: 'clientid', type: 'integer', label: 'Client Id' },
+        { name: 'eventduration', type: 'integer', label: 'Event duration' },
+        { name: 'goodafter', type: 'date_time', label: 'Good after' },
+        { name: 'isactive', type: 'boolean', label: 'Is active' },
+        { name: 'goodtill', label: 'Good till' },
+        { name: 'regrequired', type: 'boolean', label: 'Reg required' },
         { name: 'description' },
-        { name: 'promotionalsummary' },
-        { name: 'regnotificationrequired', type: 'boolean' },
-        { name: 'displaytimezonecd' },
+        { name: 'promotionalsummary', label: 'Promotional summary' },
+        { name: 'regnotificationrequired', type: 'boolean',
+          label: 'Reg notification required' },
+        { name: 'displaytimezonecd', label: 'Display time zone code' },
         { name: 'qandaemail' },
-        { name: 'eventlocation' },
-        { name: 'eventtype' },
+        { name: 'eventlocation', label: 'Event location' },
+        { name: 'eventtype', label: 'Event type' },
         { name: 'category' },
-        { name: 'servicetype' },
+        { name: 'servicetype', label: 'Service type' },
         { name: 'sponsor' },
-        { name: 'createtimestamp', type: 'date_time' },
+        { name: 'createtimestamp', type: 'date_time',
+          label: 'Create timestamp' },
         { name: 'keyword' },
-        { name: 'localelanguagecd' },
-        { name: 'localecountrycd' },
-        { name: 'lastmodified', type: 'date_time' },
-        { name: 'lastupdated', type: 'date_time' },
-        { name: 'iseliteexpired' },
+        { name: 'localelanguagecd', label: 'Locale language code' },
+        { name: 'localecountrycd', label: 'Locale country code' },
+        { name: 'lastmodified', type: 'date_time', label: 'Last modified' },
+        { name: 'lastupdated', type: 'date_time', label: 'Last Updated' },
+        { name: 'iseliteexpired', type: 'Is elite expired' },
         { name: 'application' },
         { name: 'industry' },
-        { name: 'livestart', type: 'date_time' },
-        { name: 'liveend', type: 'date_time' },
-        { name: 'archivestart', type: 'date_time' },
-        { name: 'archiveend', type: 'date_time' },
-        { name: 'eventprofile' },
-        { name: 'streamtype' },
-        { name: 'audiencekey' },
-        { name: 'extaudienceurl', label: 'Ext_audience_URL' },
-        { name: 'reporturl', label: 'Report_URL' },
-        { name: 'uploadurl', label: 'Upload_URL' },
-        { name: 'pmurl', label: 'Pm_URL' },
-        { name: 'previewurl', label: 'Preview_URL' },
-        { name: 'audienceurl', label: 'Audience_URL' },
-        { name: 'contenttype' },
-        { name: 'partnerrefstats', type: 'array', of: 'object', properties: [
-          { name: 'code' },
-          { name: 'count', type: 'integer' }
-        ] },
+        { name: 'livestart', type: 'date_time', label: 'Live start' },
+        { name: 'liveend', type: 'date_time', label: 'Live end' },
+        { name: 'archivestart', type: 'date_time', label: 'Archive start' },
+        { name: 'archiveend', type: 'date_time', label: 'Archive end' },
+        { name: 'eventprofile', label: 'Event profile' },
+        { name: 'streamtype', label: 'Stream type' },
+        { name: 'audiencekey', label: 'Audience key' },
+        { name: 'extaudienceurl', label: 'Ext audience URL' },
+        { name: 'reporturl', label: 'Report URL' },
+        { name: 'uploadurl', label: 'Upload URL' },
+        { name: 'pmurl', label: 'Pm URL' },
+        { name: 'previewurl', label: 'Preview URL' },
+        { name: 'audienceurl', label: 'Audience URL' },
+        { name: 'contenttype', label: 'Content type' },
+        { name: 'partnerrefstats', label: 'Partner ref stats',
+          type: 'array', of: 'object', properties: [
+            { name: 'code' },
+            { name: 'count', type: 'integer' }
+          ] },
         { name: 'tags', type: 'array', of: 'object', properties: [
           { name: '__name', label: 'Name' }
         ] },
@@ -245,21 +268,22 @@
           { name: 'url', label: 'URL' },
           { name: 'streamid' }
         ] },
-        { name: 'eventstd1', label: 'Event_standard1' },
-        { name: 'eventstd2', label: 'Event_standard2' },
-        { name: 'eventstd3', label: 'Event_standard3' },
-        { name: 'eventstd4', label: 'Event_standard4' },
-        { name: 'eventstd5', label: 'Event_standard5' },
+        { name: 'eventstd1', label: 'Event standard1' },
+        { name: 'eventstd2', label: 'Event standard2' },
+        { name: 'eventstd3', label: 'Event standard3' },
+        { name: 'eventstd4', label: 'Event standard4' },
+        { name: 'eventstd5', label: 'Event standard5' },
         { name: 'surveyurls', label: 'Survey_URLs', type: 'array', of: 'object',
           properties: [
             { name: '__name', label: 'Name' }
           ] },
-        { name: 'customaccounttags', type: 'array', of: 'object', properties: [
-          { name: 'groupid', type: 'integer' },
-          { name: 'groupname' },
-          { name: 'tagid', type: 'integer' },
-          { name: 'tagname' }
-        ] },
+        { name: 'customaccounttags', label: 'Custom account tags',
+          type: 'array', of: 'object', properties: [
+            { name: 'groupid', type: 'integer' },
+            { name: 'groupname' },
+            { name: 'tagid', type: 'integer' },
+            { name: 'tagname' }
+          ] },
         { name: 'media', type: 'object', properties: [
           { name: 'audios', type: 'array', of: 'object', properties: [
             { name: '__name', label: 'Name' }
@@ -282,207 +306,269 @@
           ] }
         ] },
         { name: 'eventanalytics', type: 'object', properties: [
-          { name: 'totalregistrants', type: 'integer' },
-          { name: 'totalattendees', type: 'integer' },
-          { name: 'liveattendees', type: 'integer' },
-          { name: 'ondemandattendees', type: 'integer' },
-          { name: 'numberofquestionsasked', type: 'integer' },
-          { name: 'numberofquestionsanswered', type: 'integer' },
-          { name: 'numberofpollspushed', type: 'integer' },
-          { name: 'numberofpollresponses', type: 'integer' },
-          { name: 'numberofsurveyspresented', type: 'integer' },
-          { name: 'numberofsurveyresponses', type: 'integer' },
-          { name: 'noshowcount', type: 'integer' },
-          { name: 'registrationpagehits', type: 'integer' },
-          { name: 'sharethiswidgetuniqueviews', type: 'integer' },
-          { name: 'sharethiswidgettotalviews', type: 'integer' },
-          { name: 'twitterwidgetuniqueviews', type: 'integer' },
-          { name: 'twitterwidgettotalviews', type: 'integer' },
-          { name: 'numberofctaclicks', type: 'integer' },
-          { name: 'numberofmeetingconversions', type: 'integer' },
-          { name: 'numberofdemoconversions', type: 'integer' },
-          { name: 'numberoffreetrialrequests', type: 'integer' },
-          { name: 'numberofgroupchatmessagessubmitted', type: 'integer' },
-          { name: 'numberofresourcesavailable', type: 'integer' },
-          { name: 'attendeeswhodownloadedresource', type: 'integer' },
-          { name: 'uniqueattendeeresourcedownloads', type: 'integer' },
-          { name: 'eventengagementscore', type: 'number' },
-          { name: 'averageliveminutes', type: 'integer' },
-          { name: 'averagecumulativeliveminutes', type: 'integer' },
-          { name: 'averagecumulativearchiveminutes', type: 'integer' },
-          { name: 'averagearchiveminutes', type: 'integer' }
+          { name: 'totalregistrants', type: 'integer',
+            label: 'Total registrants' },
+          { name: 'totalattendees', type: 'integer', label: 'Total attendees' },
+          { name: 'liveattendees', type: 'integer', label: 'Live attendees' },
+          { name: 'ondemandattendees', type: 'integer',
+            label: 'On demand attendees' },
+          { name: 'numberofquestionsasked', type: 'integer',
+            label: 'Number of question asked' },
+          { name: 'numberofquestionsanswered', type: 'integer',
+            label: 'Number of question answered' },
+          { name: 'numberofpollspushed', type: 'integer',
+            label: 'Number of polls pushed' },
+          { name: 'numberofpollresponses', type: 'integer',
+            label: 'Number of poll responses' },
+          { name: 'numberofsurveyspresented', type: 'integer',
+            label: 'Number of surveys presented' },
+          { name: 'numberofsurveyresponses', type: 'integer',
+            label: 'Number of survey responses' },
+          { name: 'noshowcount', type: 'integer', label: 'No show count' },
+          { name: 'registrationpagehits', type: 'integer',
+            label: 'Registration page hits' },
+          { name: 'sharethiswidgetuniqueviews', type: 'integer',
+            label: 'Share this widget unique views' },
+          { name: 'sharethiswidgettotalviews', type: 'integer',
+            label: 'Share this widget total views' },
+          { name: 'twitterwidgetuniqueviews', type: 'integer',
+            label: 'Twitter widget unique views' },
+          { name: 'twitterwidgettotalviews', type: 'integer',
+            label: 'Twitter widget total views' },
+          { name: 'numberofctaclicks', type: 'integer',
+            label: 'Number of cta clicks' },
+          { name: 'numberofmeetingconversions', type: 'integer',
+            label: 'Number of meeting conversions' },
+          { name: 'numberofdemoconversions', type: 'integer',
+            label: 'Number of demo conversions' },
+          { name: 'numberoffreetrialrequests', type: 'integer',
+            label: 'Number of free trial requests' },
+          { name: 'numberofgroupchatmessagessubmitted', type: 'integer',
+            label: 'Number of group chat messages submitted' },
+          { name: 'numberofresourcesavailable', type: 'integer',
+            label: 'Number of resources available' },
+          { name: 'attendeeswhodownloadedresource', type: 'integer',
+            label: 'Attendees who downloaded resource' },
+          { name: 'uniqueattendeeresourcedownloads', type: 'integer',
+            label: 'Unique attendee resource downloads' },
+          { name: 'eventengagementscore', type: 'number',
+            label: 'Event engagement score' },
+          { name: 'averageliveminutes', type: 'integer',
+            label: 'Average live minutes' },
+          { name: 'averagecumulativeliveminutes', type: 'integer',
+            label: 'Average cumulative live minutes' },
+          { name: 'averagecumulativearchiveminutes', type: 'integer',
+            label: 'Average cumulative archive minutes' },
+          { name: 'averagearchiveminutes', type: 'integer',
+            label: 'Average archive minutes' }
         ] }
       ]
     end,
     registrant_schema: lambda do |_input|
       [
-        { name: 'firstname', label: 'First_name' },
-        { name: 'lastname', label: 'Last_name' },
+        { name: 'firstname', label: 'First name' },
+        { name: 'lastname', label: 'Last name' },
         { name: 'email', control_type: 'email' },
         { name: 'company' },
-        { name: 'jobtitle' },
-        { name: 'addressstreet1' },
-        { name: 'addressstreet2' },
+        { name: 'jobtitle', label: 'Job title' },
+        { name: 'addressstreet1', label: 'Address street 1' },
+        { name: 'addressstreet2', label: 'Address street 2' },
         { name: 'city' },
         { name: 'state' },
         { name: 'zip', hint: 'Postal Code' },
         { name: 'country' },
-        { name: 'homephone' },
-        { name: 'workphone' },
+        { name: 'homephone', label: 'Home phone' },
+        { name: 'workphone', label: 'Work phone' },
         { name: 'fax' },
         { name: 'username' },
-        { name: 'exteventusercd',
+        { name: 'exteventusercd', label: 'Ext event user code',
           hint: 'External code used to identify the user' },
         { name: 'other' },
         { name: 'notes' },
-        { name: 'jobfunction' },
-        { name: 'companyindustry' },
-        { name: 'companysize' },
-        { name: 'partnerref' },
-        { name: 'clientid', type: 'integer' },
-        { name: 'eventid', type: 'integer' },
-        { name: 'eventuserid', type: 'integer' },
-        { name: 'std1', hint: 'Custom Field #1' },
-        { name: 'std2', hint: 'Custom Field #2' },
-        { name: 'std3', hint: 'Custom Field #3' },
-        { name: 'std4', hint: 'Custom Field #4' },
-        { name: 'std5', hint: 'Custom Field #5' },
-        { name: 'std6', hint: 'Custom Field #6' },
-        { name: 'std7', hint: 'Custom Field #7' },
-        { name: 'std8', hint: 'Custom Field #8' },
-        { name: 'std9', hint: 'Custom Field #9' },
-        { name: 'std10', hint: 'Custom Field #10' },
-        { name: 'marketingemail' },
-        { name: 'eventemail' },
-        { name: 'userprofileurl', label: 'User_profile_URL' },
-        { name: 'createtimestamp', type: 'date_time' },
-        { name: 'lastactivity' },
-        { name: 'engagementprediction' },
-        { name: 'ipaddress' },
+        { name: 'jobfunction', label: 'Job function' },
+        { name: 'companyindustry', label: 'Company industry' },
+        { name: 'companysize', label: 'Company size' },
+        { name: 'partnerref', label: 'Partner reference' },
+        { name: 'clientid', type: 'integer', label: 'Client Id' },
+        { name: 'eventid', type: 'integer', label: 'Event Id' },
+        { name: 'eventuserid', type: 'integer', label: 'Event user Id' },
+        { name: 'std1', label: 'Custom Field #1' },
+        { name: 'std2', label: 'Custom Field #2' },
+        { name: 'std3', label: 'Custom Field #3' },
+        { name: 'std4', label: 'Custom Field #4' },
+        { name: 'std5', label: 'Custom Field #5' },
+        { name: 'std6', label: 'Custom Field #6' },
+        { name: 'std7', label: 'Custom Field #7' },
+        { name: 'std8', label: 'Custom Field #8' },
+        { name: 'std9', label: 'Custom Field #9' },
+        { name: 'std10', label: 'Custom Field #10' },
+        { name: 'marketingemail', label: 'Marketing email' },
+        { name: 'eventemail', label: 'Event email' },
+        { name: 'userprofileurl', label: 'User profile URL' },
+        { name: 'createtimestamp', type: 'date_time',
+          label: 'Create timestamp' },
+        { name: 'lastactivity', label: 'Last activity' },
+        { name: 'engagementprediction', label: 'Engagement prediction' },
+        { name: 'ipaddress', label: 'IP address' },
         { name: 'os' },
         { name: 'browser' },
-        { name: 'emailformat' },
-        { name: 'campaigncode' },
-        { name: 'sourcecampaigncode' },
-        { name: 'sourceeventid', type: 'integer' },
-        { name: 'userstatus' }
+        { name: 'emailformat', label: 'Email format' },
+        { name: 'campaigncode', label: 'Campaign code' },
+        { name: 'sourcecampaigncode', label: 'Source campaign code' },
+        { name: 'sourceeventid', type: 'integer', label: 'Source event id' },
+        { name: 'userstatus', label: 'User status' }
       ]
     end,
     attendee_schema: lambda do |_input|
       [
         { name: 'email', control_type: 'email' },
-        { name: 'clientid', type: 'integer' },
-        { name: 'eventid', type: 'integer' },
-        { name: 'eventuserid', type: 'integer' },
-        { name: 'exteventusercd' },
-        { name: 'userstatus' },
-        { name: 'attendeesessions', type: 'integer' },
-        { name: 'isblocked' },
-        { name: 'engagementscore', type: 'number' },
-        { name: 'liveminutes', type: 'integer' },
-        { name: 'firstliveactivity', type: 'date_time' },
-        { name: 'lastliveactivity', type: 'date_time' },
-        { name: 'archiveminutes', type: 'integer' },
-        { name: 'firstarchiveactivity', type: 'date_time' },
-        { name: 'lastarchiveactivity', type: 'date_time' },
-        { name: 'askedquestions', type: 'integer' },
-        { name: 'resourcesdownloaded', type: 'integer' },
-        { name: 'answeredpolls', type: 'integer' },
-        { name: 'answeredsurveys', type: 'integer' },
+        { name: 'clientid', type: 'integer', label: 'Client Id' },
+        { name: 'eventid', type: 'integer', label: 'Event Id' },
+        { name: 'eventuserid', type: 'integer', label: 'Event user Id' },
+        { name: 'exteventusercd', label: 'Ext event user code' },
+        { name: 'userstatus', label: 'User status' },
+        { name: 'attendeesessions', type: 'integer',
+          label: 'Attendee sessions' },
+        { name: 'isblocked', label: 'Is blocked' },
+        { name: 'engagementscore', type: 'number', label: 'Engagement score' },
+        { name: 'liveminutes', type: 'integer', label: 'Live minutes' },
+        { name: 'firstliveactivity', type: 'date_time',
+          label: 'First live activity' },
+        { name: 'lastliveactivity', type: 'date_time',
+          label: 'Last live activity' },
+        { name: 'archiveminutes', type: 'integer', label: 'Archive minutes' },
+        { name: 'firstarchiveactivity', type: 'date_time',
+          label: 'First archive activity' },
+        { name: 'lastarchiveactivity', type: 'date_time',
+          label: 'Last archive activity' },
+        { name: 'askedquestions', type: 'integer', label: 'Asked questions' },
+        { name: 'resourcesdownloaded', type: 'integer',
+          label: 'Resources downloaded' },
+        { name: 'answeredpolls', type: 'integer', label: 'Answered polls' },
+        { name: 'answeredsurveys', type: 'integer', label: 'Answered surveys' },
         { name: 'questions', type: 'array', of: 'object', properties:
-          [{ name: 'questionid', type: 'integer' },
-           { name: 'createtimestamp', type: 'date_time' },
+          [{ name: 'questionid', type: 'integer', label: 'Question Id' },
+           { name: 'createtimestamp', type: 'date_time',
+             label: 'Create timestamp' },
            { name: 'content' },
            { name: 'answer', type: 'object', properties:
-              [{ name: 'createtimestamp', type: 'date_time' },
+              [{ name: 'createtimestamp', type: 'date_time',
+                 label: 'Create timestamp' },
                { name: 'content' },
-               { name: 'presenterid', type: 'integer' },
-               { name: 'presentername' },
+               { name: 'presenterid', type: 'integer', label: 'Presenter Id' },
+               { name: 'presentername', label: 'Presenter name' },
                { name: 'privacy' }] }] },
         { name: 'polls', type: 'array', of: 'object', properties:
-          [{ name: 'pollid', type: 'integer' },
-           { name: 'pollsubmittedtimestamp', type: 'date_time' },
-           { name: 'pollquestionid', type: 'integer' },
-           { name: 'pollquestion' },
-           { name: 'pollanswers', type: 'array', of: 'object', properties:
+          [{ name: 'pollid', type: 'integer', label: 'Poll Id' },
+           { name: 'pollsubmittedtimestamp', type: 'date_time',
+             label: 'Poll submitted timestamp' },
+           { name: 'pollquestionid', type: 'integer',
+             label: 'Poll question Id' },
+           { name: 'pollquestion', label: 'Poll question' },
+           { name: 'pollanswers', label: 'Poll answers',
+             type: 'array', of: 'object', properties:
               [{ name: '__name', label: 'Name' }] },
-           { name: 'pollanswersdetail', type: 'array', of: 'object', properties:
-              [{ name: 'answercode' },
+           { name: 'pollanswersdetail', label: 'Poll answers detail',
+             type: 'array', of: 'object', properties:
+              [{ name: 'answercode', label: 'Answer code' },
                { name: 'answer' }] }] },
         { name: 'resources', type: 'array', of: 'object', properties:
-          [{ name: 'resourceid', type: 'integer' },
-           { name: 'resourceviewed' },
-           { name: 'resourceviewedtimestamp', type: 'date_time' }] },
+          [{ name: 'resourceid', type: 'integer', label: 'Resource Id' },
+           { name: 'resourceviewed', label: 'Resource viewed' },
+           { name: 'resourceviewedtimestamp', type: 'date_time',
+             label: 'Resource viewed timestamp' }] },
         { name: 'surveys', type: 'array', of: 'object', properties:
-          [{ name: 'surveyid' },
-           { name: 'surveysubmittedtimestamp', type: 'date_time' },
-           { name: 'surveyquestions', type: 'array', of: 'object', properties:
-              [{ name: 'surveyquestionid', type: 'integer' },
-               { name: 'surveyquestion' },
-               { name: 'surveyanswers', type: 'array', of: 'object', properties:
+          [{ name: 'surveyid', label: 'Survey Id' },
+           { name: 'surveysubmittedtimestamp', type: 'date_time',
+             label: 'Survey submitted timestamp' },
+           { name: 'surveyquestions', label: 'Survey questions',
+             type: 'array', of: 'object', properties:
+              [{ name: 'surveyquestionid', type: 'integer',
+                 label: 'Survey question Id' },
+               { name: 'surveyquestion', label: 'Survey question' },
+               { name: 'surveyanswers', type: 'array', of: 'object',
+                 label: 'Survey answers', properties:
                   [{ name: '__name', label: 'Name' }] },
                { name: 'surveyanswersdetail', type: 'array', of: 'object',
-                 properties:
-                  [{ name: 'answercode' },
+                 label: 'Survey answers detail', properties:
+                  [{ name: 'answercode', label: 'Answer code' },
                    { name: 'answer' }] }] }] },
-        { name: 'twitterwidget', type: 'array', of: 'object', properties:
+        { name: 'twitterwidget', type: 'array', of: 'object',
+          label: 'Twitter widget', properties:
           [{ name: 'date', type: 'date_time' },
-           { name: 'tweetdescription' }] },
-        { name: 'calltoactions', type: 'array', of: 'object', properties:
-          [{ name: 'ctaid' },
-           { name: 'ctaname' },
+           { name: 'tweetdescription', label: 'Tweet description' }] },
+        { name: 'calltoactions', type: 'array', of: 'object',
+          label: 'Call to actions', properties:
+          [{ name: 'ctaid', label: 'Cta Id' },
+           { name: 'ctaname', label: 'Cta name' },
            { name: 'clicks' },
            { name: 'date' }] },
-        { name: 'testwidgets', type: 'array', of: 'object', properties:
-          [{ name: 'testwidgetresult' },
+        { name: 'testwidgets', type: 'array', of: 'object',
+          label: 'Test widgets', properties:
+          [{ name: 'testwidgetresult', label: 'Test widget result' },
            { name: 'retries', type: 'integer' },
-           { name: 'correctanswersneeded', type: 'integer' },
-           { name: 'correctanswersprovided', type: 'integer' }] },
-        { name: 'testwidgetresult' },
-        { name: 'certificationwidgetresult' },
-        { name: 'certificationcredit' },
-        { name: 'certificationtimestamp', type: 'date_time' },
-        { name: 'userprofileurl', label: 'User_profile_URL' },
-        { name: 'campaigncode' },
-        { name: 'sourcecampaigncode' },
-        { name: 'cumulativeliveminutes', type: 'integer' },
-        { name: 'cumulativearchiveminutes', type: 'integer' },
-        { name: 'partnerref' },
-        { name: 'attendancepartnerref' },
+           { name: 'correctanswersneeded', type: 'integer',
+             label: 'Correct answers needed' },
+           { name: 'correctanswersprovided', type: 'integer',
+             label: 'Correct answers provided' }] },
+        { name: 'testwidgetresult', label: 'Test widget result' },
+        { name: 'certificationwidgetresult',
+          label: 'Certification widget result' },
+        { name: 'certificationcredit', label: 'Certification credit' },
+        { name: 'certificationtimestamp', type: 'date_time',
+          label: 'Certification timestamp' },
+        { name: 'userprofileurl', label: 'User profile URL' },
+        { name: 'campaigncode', label: 'Campaign code' },
+        { name: 'sourcecampaigncode', label: 'Source campaign code' },
+        { name: 'cumulativeliveminutes', type: 'integer',
+          label: 'Cumulative live minutes' },
+        { name: 'cumulativearchiveminutes', type: 'integer',
+          label: 'Cumulative archive minutes' },
+        { name: 'partnerref', label: 'Partner reference' },
+        { name: 'attendancepartnerref', label: 'Attendance partner ref' },
         { name: 'certifications', type: 'array', of: 'object', properties:
-          [{ name: 'certificationid', type: 'integer' },
-           { name: 'certificationresult' },
-           { name: 'certificationname' },
-           { name: 'certificationcredit' },
-           { name: 'certificationtimestamp', type: 'date_time' },
-           { name: 'certificationurl', label: 'Certification_URL' }] },
-        { name: 'meetingconversions', type: 'array', of: 'object', properties:
-          [{ name: 'widgetid' },
-           { name: 'widgetname' },
-           { name: 'widgettype' },
-           { name: 'widgetaction' },
-           { name: 'widgetsubmittedtimestamp', type: 'date_time' }] },
-        { name: 'democonversions', type: 'array', of: 'object', properties:
-          [{ name: 'widgetid' },
-           { name: 'widgetname' },
-           { name: 'widgettype' },
-           { name: 'widgetaction' },
-           { name: 'widgetsubmittedtimestamp', type: 'date_time' }] },
-        { name: 'freetrial', type: 'array', of: 'object', properties:
-          [{ name: 'widgetid' },
-           { name: 'widgetname' },
-           { name: 'widgettype' },
-           { name: 'widgetaction' },
-           { name: 'widgetsubmittedtimestamp', type: 'date_time' }] }
+          [{ name: 'certificationid', type: 'integer',
+             label: 'Certification Id' },
+           { name: 'certificationresult', label: 'Certification result' },
+           { name: 'certificationname', label: 'Certification name' },
+           { name: 'certificationcredit', label: 'Certification credit' },
+           { name: 'certificationtimestamp', type: 'date_time',
+             label: 'Certification timestamp' },
+           { name: 'certificationurl', label: 'Certification URL' }] },
+        { name: 'meetingconversions', type: 'array', of: 'object',
+          label: 'Meeting conversions', properties:
+          [{ name: 'widgetid', label: 'Widget Id' },
+           { name: 'widgetname', label: 'Widget name' },
+           { name: 'widgettype', label: 'Widget type' },
+           { name: 'widgetaction', label: 'Widget action' },
+           { name: 'widgetsubmittedtimestamp', type: 'date_time',
+             label: 'Widget submitted timestamp' }] },
+        { name: 'democonversions', type: 'array', of: 'object',
+          label: 'Demo conversions', properties:
+          [{ name: 'widgetid', label: 'Widget Id' },
+           { name: 'widgetname', label: 'Widget name' },
+           { name: 'widgettype', label: 'Widget type' },
+           { name: 'widgetaction', label: 'Widget action' },
+           { name: 'widgetsubmittedtimestamp', type: 'date_time',
+             label: 'Widget submitted timestamp' }] },
+        { name: 'freetrial', type: 'array', of: 'object', label: 'Free trial',
+          properties:
+          [{ name: 'widgetid', label: 'Widget Id' },
+           { name: 'widgetname', label: 'Widget name' },
+           { name: 'widgettype', label: 'Widget type' },
+           { name: 'widgetaction', label: 'Widget action' },
+           { name: 'widgetsubmittedtimestamp', type: 'date_time',
+             label: 'Widget submitted timestamp' }] }
       ]
     end,
     lead_schema: lambda do |_input|
       [
         { name: 'email' },
-        { name: 'businessinterests', type: 'array', of: 'object', properties:
+        { name: 'businessinterests', label: 'Business interests',
+          type: 'array', of: 'object', properties:
           [{ name: '__name', label: 'Name' }] },
-        { name: 'engagementlevel' },
-        { name: 'userprofileurl' }
+        { name: 'engagementlevel', label: 'Engagement level' },
+        { name: 'userprofileurl', label: 'User profile URL' }
       ]
     end,
     create_event_input: lambda do |_input|
@@ -490,13 +576,14 @@
         required('title', 'liveStart', 'liveDuration').
         ignored('eventType', 'languageCd', 'timeZone', 'customAccountTag').
         concat([{ name: 'eventType', control_type: 'select',
-                  pick_list: :Event_types,
+                  pick_list: :event_types,
                   type: 'string',
+                  label: 'Event type',
                   optional: false,
                   toggle_hint: 'Select from list',
                   toggle_field: {
                     name: 'eventType',
-                    label: 'Event_type',
+                    label: 'Event type',
                     optional: false,
                     type: 'string',
                     control_type: 'text',
@@ -506,12 +593,13 @@
                 { name: 'languageCd', control_type: 'select',
                   pick_list: :languages,
                   type: 'string',
+                  label: 'Language code',
                   optional: false,
                   toggle_hint: 'Select from list',
                   toggle_field:
                   {
                     name: 'languageCd',
-                    label: 'Language_code',
+                    label: 'Language code',
                     optional: false,
                     type: 'string',
                     control_type: 'text',
@@ -519,13 +607,14 @@
                     hint: 'Allowed values, E.g. bg, zh, cs'
                   } },
                 { name: 'timeZone', control_type: 'select',
-                  pick_list: :Time_zones,
+                  pick_list: :time_zones,
                   toggle_hint: 'Select from list',
                   optional: false,
+                  label: 'Time zone',
                   type: 'string',
                   toggle_field: {
                     name: 'timeZone',
-                    label: 'Time_zone',
+                    label: 'Time zone',
                     optional: false,
                     type: 'string',
                     control_type: 'text',
@@ -536,7 +625,8 @@
                   name: 'customAccountTag', sticky: true, type: 'integer',
                   hint: 'An account with enabled custom account tags, it' \
                        ' is required to provide at least 1 tag id via the' \
-                       ' customAccountTag parameter.'
+                       ' customAccountTag parameter.',
+                  label: 'Custom account tag'
                 }])
     end,
     create_event_output: lambda do |_input|
@@ -572,57 +662,53 @@
     end,
     update_registrant_output: lambda do |_input|
       [{ name: 'updatedregistrants', type: 'array', of: 'object', properties:
-        [{ name: '__name', label: 'Name' }] }]
-    end,
-    copy_event_input: lambda do |_input|
-      call('event_management_schema', '').
-        required('liveStart', 'liveDuration').
-        ignored('eventAbstract').
-        concat([{ name: 'eventid', optional: false, type: 'integer' }])
-    end,
-    copy_event_output: lambda do |_input|
-      call('event_management_schema', '')
+        [{ name: '__name', label: 'ID' }] }]
     end,
     search_records_input: lambda do |_input|
       [
         { name: 'startDate', type: 'date', hint: 'If startDate is' \
           ' not sent, response will return all events from the past 3 months.' \
           ' The startDate will filter the list of events based on' \
-          ' dateFilterMode parameter value.' },
+          ' dateFilterMode parameter value.', label: 'Start date' },
         { name: 'endDate', type: 'date', hint: 'If endDate is not sent,' \
           ' response will return all events from the past 3 months. The' \
           ' endDate will filter the list of events based on dateFilterMode' \
-          ' parameter value.' },
-        { name: 'dateInterval', type: 'integer', hint: 'Number of days' \
-          ' returned in a response.' },
-        { name: 'dateIntervalOffset', type: 'integer', hint: 'Number of' \
-          ' days from which the interval should encompass.' },
+          ' parameter value.', label: 'End date' },
+        { name: 'dateInterval', type: 'integer', label: 'Date interval',
+          hint: 'Number of days returned in a response.' },
+        { name: 'dateIntervalOffset', type: 'integer',
+          label: 'Date interval offset',
+          hint: 'Number of days from which the interval should encompass.' },
         { name: 'dateIntervalTimezone', hint: 'Timezone to be used for' \
-          ' determining the 24 hour period that constitutes a day.' },
+          ' determining the 24 hour period that constitutes a day.',
+          label: 'Date interval timezone' },
         { name: 'includeSubaccounts', control_type: 'select',
           pick_list: :boolean_list,
           type: 'string',
+          label: 'Include subaccounts',
           hint: "If 'Yes' then sub-accounts will be included in the response",
           toggle_hint: 'Select from list',
           toggle_field: {
             name: 'includeSubaccounts',
-            label: 'IncludeSubaccounts',
+            label: 'Include subaccounts',
             optional: true,
             type: 'string',
             control_type: 'text',
             toggle_hint: 'Use custom value',
             hint: 'Allowed values are Y,N'
           } },
-        { name: 'subaccounts', hint: 'Comma separated list of child' \
-          ' client ids' },
+        { name: 'subaccounts', label: 'Sub accounts',
+          hint: 'Comma separated list of child client ids.' \
+          ' E.g. "22921, 32295"' },
         { name: 'dateFilterMode', control_type: 'select',
-          pick_list: :Date_filter_mode_list,
+          pick_list: :date_filter_mode_list,
           type: 'string',
+          label: 'Date filter mode',
           hint: 'Type of filter to be used with the date value.',
           toggle_hint: 'Select from list',
           toggle_field: {
             name: 'dateFilterMode',
-            label: 'Date_filter_mode',
+            label: 'Date filter mode',
             optional: true,
             type: 'string',
             control_type: 'text',
@@ -630,12 +716,13 @@
             hint: 'Only allowed value is "lastActivity"'
           } },
         { name: 'filterOrder', control_type: 'select',
-          pick_list: :Filter_order_list,
+          pick_list: :filter_order_list,
           type: 'string',
+          label: 'Filter order',
           toggle_hint: 'Select from list',
           toggle_field: {
             name: 'filterOrder',
-            label: 'Filter_order',
+            label: 'Filter order',
             optional: true,
             type: 'string',
             control_type: 'text',
@@ -645,12 +732,13 @@
         { name: 'includeInactive', control_type: 'select',
           pick_list: :boolean_list,
           type: 'string',
+          label: 'Include inactive',
           hint: "If 'Yes' then inactive events will be included in the" \
           ' response.',
           toggle_hint: 'Select from list',
           toggle_field: {
             name: 'includeInactive',
-            label: 'Include_inactive',
+            label: 'Include inactive',
             optional: true,
             type: 'string',
             control_type: 'text',
@@ -658,13 +746,14 @@
             hint: 'Allowed values are Y, N'
           } },
         { name: 'contentType', control_type: 'select',
-          pick_list: :Content_type_list,
+          pick_list: :content_type_list,
           type: 'string',
+          label: 'Content type',
           hint: 'Filter events by contentType',
           toggle_hint: 'Select from list',
           toggle_field: {
             name: 'contentType',
-            label: 'Content_type',
+            label: 'Content type',
             optional: true,
             type: 'string',
             control_type: 'text',
@@ -672,34 +761,37 @@
             hint: 'Allowed values, E.g. experience, gateway, pdf'
           } },
         { name: 'itemsPerPage', type: 'integer', hint: 'Number of items to be' \
-          ' retrieved per page. If "includesubaccounts = Y", then only' \
-          ' itemsPerPage will available.' },
+          ' retrieved per page. If "includesubaccounts = Yes", then only' \
+          ' itemsPerPage will available.', label: 'Items per page' },
         { name: 'pageOffset', type: 'integer', hint: 'Number of' \
-          ' page to retrieve. If "includesubaccounts = Y",' \
-          ' then only itemsPerPage will available.' },
+          ' page to retrieve. If "includesubaccounts = Yes",' \
+          ' then only itemsPerPage will available.', label: 'Page offset' },
         { name: 'excludeSubaccounts', control_type: 'select',
           pick_list: :boolean_list,
           type: 'string',
+          label: 'Exclude subaccounts',
           hint: "If 'Yes' then sub-accounts will be excluded in the response",
           toggle_hint: 'Select from list',
           toggle_field: {
             name: 'excludeSubaccounts',
-            label: 'ExcludeSubaccounts',
+            label: 'Exclude subaccounts',
             optional: true,
             type: 'string',
             control_type: 'text',
             toggle_hint: 'Use custom value',
             hint: 'Allowed values are Y,N'
           } },
-        { name: 'partnerref', hint: 'Filter by partnerref	E.g. EM' },
+        { name: 'partnerref', hint: 'Filter by partner reference E.g. EM',
+          label: 'Partner reference' },
         { name: 'excludeLive', control_type: 'select',
           pick_list: :boolean_list,
           type: 'string',
+          label: 'Exclude live',
           hint: 'Filter to exclude registrants which register after event ends',
           toggle_hint: 'Select from list',
           toggle_field: {
             name: 'excludeLive',
-            label: 'Exclude_live',
+            label: 'Exclude live',
             optional: true,
             type: 'string',
             control_type: 'text',
@@ -709,11 +801,12 @@
         { name: 'userStatus', control_type: 'select',
           pick_list: :user_status_list,
           type: 'string',
+          label: 'User status',
           hint: 'Filter to users based on their status.',
           toggle_hint: 'Select from list',
           toggle_field: {
             name: 'userStatus',
-            label: 'User_status',
+            label: 'User status',
             optional: true,
             type: 'string',
             control_type: 'text',
@@ -723,11 +816,12 @@
         { name: 'filterforgotten', control_type: 'select',
           pick_list: :boolean_list,
           type: 'string',
+          label: 'Filter forgotten',
           hint: 'Forgotten registrants filter.',
           toggle_hint: 'Select from list',
           toggle_field: {
             name: 'filterforgotten',
-            label: 'Filter_forgotten',
+            label: 'Filter forgotten',
             optional: true,
             type: 'string',
             control_type: 'text',
@@ -737,11 +831,12 @@
         { name: 'excludeAnonymous', control_type: 'select',
           pick_list: :boolean_list,
           type: 'string',
+          label: 'Exclude anonymous',
           hint: 'Filter to exclude System-Generated Email Addresses.',
           toggle_hint: 'Select from list',
           toggle_field: {
             name: 'excludeAnonymous',
-            label: 'Exclude_anonymous',
+            label: 'Exclude anonymous',
             optional: true,
             type: 'string',
             control_type: 'text',
@@ -756,14 +851,15 @@
                 'excludeLive', 'userStatus', 'filterforgotten',
                 'excludeAnonymous').
         concat([{ name: 'dateFilterMode', control_type: 'select',
-                  pick_list: :Event_date_filter_mode_list,
+                  pick_list: :event_date_filter_mode_list,
                   default: 'creation',
                   type: 'string',
+                  label: 'Date filter mode',
                   hint: 'Type of filter to be used with the date value.',
                   toggle_hint: 'Select from list',
                   toggle_field: {
                     name: 'dateFilterMode',
-                    label: 'Date_filter_mode',
+                    label: 'Date filter mode',
                     optional: true,
                     type: 'string',
                     control_type: 'text',
@@ -789,14 +885,14 @@
                   control_type: 'email' },
                 { name: 'noshow',
                   hint: 'Registrants who did not show up for the event' },
-                { name: 'eventId', optional: false }])
+                { name: 'eventId', optional: false, label: 'Event Id' }])
     end,
     search_event_attendee_input: lambda do |_input|
       call('search_records_input', '').
         ignored('includeSubaccounts', 'subaccounts', 'filterOrder',
                 'includeInactive', 'contentType', 'itemsPerPage', 'pageOffset',
                 'excludeLive', 'excludeSubaccounts').
-        concat([{ name: 'eventId', optional: false }])
+        concat([{ name: 'eventId', optional: false, label: 'Event Id' }])
     end,
     search_lead_input: lambda do |_input|
       call('search_records_input', '').
@@ -835,12 +931,13 @@
     end,
     get_event_input: lambda do |_input|
       [{ name: 'eventId', type: 'integer', optional: false,
-         hint: 'Id of the particular event' }]
+         hint: 'Id of the particular event', label: 'Event Id' }]
     end,
     get_registrant_input: lambda do |_input|
       [{ name: 'email', optional: false, control_type: 'email',
          hint: 'Unique email id used in the registration' },
-       { name: 'partnerref', hint: 'Filter by partnerref. E.g. EM' }]
+       { name: 'partnerref', label: 'Partner reference',
+         hint: 'Filter by partner reference. E.g. EM' }]
     end,
     get_attendee_input: lambda do |_input|
       [{ name: 'email', optional: false, control_type: 'email',
@@ -879,127 +976,42 @@
     lead_trigger_output: lambda do |_input|
       call('lead_schema', '')
     end,
-    search_event_url: lambda do |_input|
-      url = 'event'
-      url
+    search_execute: lambda do |input|
+      if input['object'] == 'event_registrant'
+        get("event/#{input['eventId']}/registrant", input)
+      elsif input['object'] == 'event_attendee'
+        get("event/#{input['eventId']}/attendee", input)
+      else
+        get(input['object'], input)
+      end
     end,
-    search_registrant_url: lambda do |_input|
-      url = 'registrant'
-      url
+    create_execute: lambda do |input|
+      if input['object'] == 'event'
+        post('event')
+      else
+        post("event/#{input['eventId']}/registrant")
+      end
     end,
-    search_attendee_url: lambda do |_input|
-      url = 'attendee'
-      url
+    update_execute: lambda do |input|
+      if input['object'] == 'event'
+        put("event/#{input['eventId']}")
+      else
+        patch("registrant/#{input['email']}")
+      end
     end,
-    search_event_registrant_url: lambda do |input|
-      url = "event/#{input['eventId']}/registrant"
-      url
+    trigger_url: lambda do |input|
+      if input['object'] == 'event'
+        get('event?dateFilterMode=creation')
+      else
+        get(input['object'])
+      end
     end,
-    search_event_attendee_url: lambda do |input|
-      url = "event/#{input['eventId']}/attendee"
-      url
-    end,
-    search_lead_url: lambda do |_input|
-      url = 'lead'
-      url
-    end,
-    get_event_url: lambda do |input|
-      get("event/#{input['eventId']}")&.
-        after_error_response(/.*/) do |code, _body, _header, message|
-          error(" #{code}: #{message}")
-        end
-    end,
-    get_registrant_url: lambda do |input|
-      response = get("registrant/#{input['email']}")&.
-        after_error_response(/.*/) do |code, _body, _header, message|
-          error(" #{code}: #{message}")
-        end
-      response['registrant']
-    end,
-    get_attendee_url: lambda do |input|
-      get("attendee/#{input['email']}")&.
-        after_error_response(/.*/) do |code, _body, _header, message|
-          error(" #{code}: #{message}")
-        end
-    end,
-    create_event_url: lambda do |input|
-      response = post('event').
-                 payload(input).
-                 request_format_www_form_urlencoded&.
-        after_error_response(/.*/) do |code, _body, _header, message|
-          error("#{code}: #{message}")
-        end
-      response['wccevent']
-    end,
-    create_registrant_url: lambda do |input|
-      post("event/#{input['eventId']}/registrant").
-        payload(input).
-        request_format_www_form_urlencoded&.
-        after_error_response(/.*/) do |code, _body, _header, message|
-          error("#{code}: #{message}")
-        end
-    end,
-    update_event_url: lambda do |input|
-      response = put("event/#{input['eventId']}").payload(input).
-                 request_format_www_form_urlencoded&.
-        after_error_response(/.*/) do |code, _body, _header, message|
-          error("#{code}: #{message}")
-        end
-      response['wccevent']
-    end,
-    update_registrant_url: lambda do |input|
-      patch("registrant/#{input['email']}").payload(input).
-        request_format_www_form_urlencoded&.
-        after_error_response(/.*/) do |code, _body, _header, message|
-          error("#{code}: #{message}")
-        end
-    end,
-    event_trigger_url: lambda do |_input|
-      get('event?dateFilterMode=creation')
-    end,
-    registrant_trigger_url: lambda do |_input|
-      get('registrant')
-    end,
-    lead_trigger_url: lambda do |_input|
-      get('lead')
-    end,
-    event_update_trigger_url: lambda do |_input|
-      get('event?dateFilterMode=modified')
-    end,
-    registrant_update_trigger_url: lambda do |_input|
-      get('registrant?dateFilterMode=lastActivity')
-    end,
-    event_get_sample_output: lambda do |_input|
-      get('event?dateFilterMode=creation')['events']&.first
-    end,
-    registrant_get_sample_output: lambda do |_input|
-      get('registrant')['registrants']&.first
-    end,
-    attendee_get_sample_output: lambda do |_input|
-      get('attendee')['attendees']&.first
-    end,
-    create_event_sample_output: lambda do |_input|
-      call('event_management_sample_output', '')
-    end,
-    create_registrant_sample_output: lambda do |_input|
-      get('registrant')['registrants']&.first
-    end,
-    update_event_sample_output: lambda do |_input|
-      call('event_management_sample_output', '')
-    end,
-    update_registrant_sample_output: lambda do |_input|
-      { 'updatedregistrants': [
-        { '__name': '399133565' }
-      ] }
-    end,
-    event_trigger_sample_output: lambda do |_input|
-      get('event?dateFilterMode=creation')['events']&.first
-    end,
-    registrant_trigger_sample_output: lambda do |_input|
-      get('registrant')['registrants']&.first
-    end,
-    lead_trigger_sample_output: lambda do |_input|
-      get('lead')['leads']&.first
+    update_trigger_url: lambda do |input|
+      if input['object'] == 'event'
+        get('event?dateFilterMode=modified')
+      else
+        get('registrant?dateFilterMode=lastActivity')
+      end
     end,
     event_management_sample_output: lambda do |_input|
       {
@@ -1192,12 +1204,15 @@
     },
     copy_event_input: {
       fields: lambda do |_connection, _config_fields|
-        call('copy_event_input', '')
+        call('event_management_schema', '').
+          required('liveStart', 'liveDuration').
+          ignored('eventAbstract').
+          concat([{ name: 'eventid', optional: false, type: 'integer' }])
       end
     },
     copy_event_output: {
       fields: lambda do |_connection, _config_fields|
-        call('copy_event_output', '')
+        call('event_management_schema', '')
       end
     },
     trigger_input: {
@@ -1433,14 +1448,14 @@
           optional: false,
           control_type: 'select',
           pick_list: :search_records_object_list,
-          hint: 'Select any On24 Record object, e.g. Registrant'
+          hint: 'Select any On24 object, e.g. Registrant'
         }
       ],
       input_fields: lambda do |object_definitions|
         object_definitions['search_input']
       end,
       execute: lambda do |_connection, input|
-        response = get(call("search_#{input['object']}_url", input), input)&.
+        response = call('search_execute', input)&.
         after_error_response(/.*/) do |code, _body, _header, message|
           error("#{code}: #{message}")
         end
@@ -1450,7 +1465,13 @@
         object_definitions['search_output']
       end,
       sample_output: lambda do |_connection, input|
-        get("#{input['object']}?includeSubaccounts=Y&itemsPerPage=1")
+        if input['object'] == 'event_registrant'
+          get('registrant?itemsPerPage=1')
+        elsif input['object'] == 'event_attendee'
+          get('attendee?itemsPerPage=1')
+        else
+          get("#{input['object']}?includeSubaccounts=Y&itemsPerPage=1")
+        end
       end
     },
     get_object:
@@ -1459,7 +1480,7 @@
       subtitle: 'Get object in ON24',
       description: lambda do |_connection, get_object_list|
         "Get <span class='provider'>" \
-        "#{get_object_list[:object] || 'records'}</span> " \
+        "#{get_object_list[:object] || 'record'}</span> " \
         'in <span class="provider">ON24</span> '
       end,
       config_fields: [
@@ -1468,21 +1489,30 @@
           optional: false,
           control_type: 'select',
           pick_list: :get_records_object_list,
-          hint: 'Select the object from list.'
+          hint: 'Select any On24 object, e.g. Registrant'
         }
       ],
       input_fields: lambda do |object_definitions|
         object_definitions['get_input']
       end,
       execute: lambda do |_connection, input|
-        response = call("get_#{input['object']}_url", input)
+        response =
+          get("#{input['object']}/#{input['eventId'] || input['email']}")&.
+          after_error_response(/.*/) do |code, _body, _header, message|
+            error(" #{code}: #{message}")
+          end
+        response[input['object']] || response
         call('format_response_data', response.presence)
       end,
       output_fields: lambda do |object_definitions|
         object_definitions['get_output']
       end,
       sample_output: lambda do |_connection, input|
-        call("#{input['object']}_get_sample_output", '')
+        if input['object'] == 'event'
+          get('event?dateFilterMode=creation')['events']&.first
+        else
+          get(input['object'])[input['object'].pluralize]&.first
+        end
       end
     },
     create_object:
@@ -1491,13 +1521,15 @@
       subtitle: 'Create object in ON24',
       description: lambda do |_connection, create_object_list|
         "Create <span class='provider'>" \
-        "#{create_object_list[:object] || 'records'}</span> " \
+        "#{create_object_list[:object] || 'record'}</span> " \
         'in <span class="provider">ON24</span>'
       end,
-      help: lambda do |_connection, _object_list|
-        'If a field is configured as "required" on the registration page,' \
-        ' you must pass in a valid value, or the request will not be' \
-        ' successful. Note: Only for Registrant'
+      help: lambda do |_connection, object_list|
+        if object_list['object'] == 'Registrant'
+          'If a field is configured as "required" on the registration page,' \
+          ' you must pass in a valid value, or the request will not be' \
+          ' successful. Note: Only for Registrant'
+        end
       end,
       config_fields: [
         {
@@ -1505,21 +1537,30 @@
           optional: false,
           control_type: 'select',
           pick_list: :object_list,
-          hint: 'Select the object from list.'
+          hint: 'Select any On24 object, e.g. Registrant'
         }
       ],
       input_fields: lambda do |object_definitions|
         object_definitions['create_input']
       end,
       execute: lambda do |_connection, input|
-        response = call("create_#{input['object']}_url", input)
+        response = call('create_execute', input).payload(input).
+                   request_format_www_form_urlencoded&.
+          after_error_response(/.*/) do |code, _body, _header, message|
+            error("#{code}: #{message}")
+          end
+        response['wccevent'] || response
         call('format_response_data', response.presence)
       end,
       output_fields: lambda do |object_definitions|
         object_definitions['create_output']
       end,
       sample_output: lambda do |_connection, input|
-        call("create_#{input['object']}_sample_output", '')
+        if input['object'] == 'event'
+          call('event_management_sample_output', '')
+        else
+          get('registrant')['registrants']&.first
+        end
       end
     },
     update_object:
@@ -1528,7 +1569,7 @@
       subtitle: 'Update object in ON24 by ID',
       description: lambda do |_connection, update_object_list|
         "Update <span class='provider'>" \
-        "#{update_object_list[:object] || 'records'}</span> " \
+        "#{update_object_list[:object] || 'record'}</span> " \
         'in <span class="provider">ON24</span> by ID'
       end,
       config_fields: [
@@ -1537,21 +1578,32 @@
           optional: false,
           control_type: 'select',
           pick_list: :object_list,
-          hint: 'Select the object from list.'
+          hint: 'Select any On24 object, e.g. Registrant'
         }
       ],
       input_fields: lambda do |object_definitions|
         object_definitions['update_input']
       end,
       execute: lambda do |_connection, input|
-        response = call("update_#{input['object']}_url", input)
+        response = call('update_execute', input).payload(input).
+                   request_format_www_form_urlencoded&.
+          after_error_response(/.*/) do |code, _body, _header, message|
+            error("#{code}: #{message}")
+          end
+        response['wccevent'] || response
         call('format_response_data', response.presence)
       end,
       output_fields: lambda do |object_definitions|
         object_definitions['update_output']
       end,
       sample_output: lambda do |_connection, input|
-        call("update_#{input['object']}_sample_output", '')
+        if input['object'] == 'event'
+          call('event_management_sample_output', '')
+        else
+          { 'updatedregistrants': [
+            { '__name': '399133565' }
+          ] }
+        end
       end
     },
     copy_event:
@@ -1564,7 +1616,8 @@
         object_definitions['copy_event_input']
       end,
       execute: lambda do |_connection, input|
-        response = post("event?eventsource=#{input['eventid']}").payload(input).
+        response = post("event?eventsource=#{input['eventid']}").
+                   payload(input.except('eventid')).
                    request_format_www_form_urlencoded&.
                    after_error_response(/.*/) do |code, _body, _header, message|
                      error("#{code}: #{message}")
@@ -1699,7 +1752,7 @@
     new_record:
     {
       title: 'New record',
-      subtitle: 'Triggers immediately when new record created',
+      subtitle: 'Triggers when new record created',
       description: lambda do |_connection, create_object_list|
         "New <span class='provider'>" \
         "#{create_object_list[:object] || 'records'}</span> " \
@@ -1722,7 +1775,7 @@
         limit = 50
         page_off_set = closure['page_off_set'] || 0
         date_created = closure['date_created'] || input['since'] || 1.hour.ago
-        response = call("#{input['object']}_trigger_url", '').
+        response = call('trigger_url', '').
                    params(itemsPerPage: limit,
                           startDate: date_created,
                           filterOrder: 'asc',
@@ -1748,13 +1801,17 @@
         object_definitions['trigger_output']
       end,
       sample_output: lambda do |_connection, input|
-        call("#{input['object']}_trigger_sample_output", '')
+        if input['object'] == 'event'
+          get('event?dateFilterMode=creation')['events']&.first
+        else
+          get(input['object'])[input['object'].pluralize]&.first
+        end
       end
     },
     new_or_update_record:
     {
       title: 'New or Update record',
-      subtitle: 'Triggers immediately when new record created or updated',
+      subtitle: 'Triggers when new record created or updated',
       description: lambda do |_connection, create_object_list|
         "New/Update <span class='provider'>" \
         "#{create_object_list[:object] || 'records'}</span> " \
@@ -1777,7 +1834,7 @@
         limit = 100
         page_off_set = closure['page_off_set'] || 0
         date_updated = closure['date_updated'] || input['since'] || 1.hour.ago
-        response = call("#{input['object']}_update_trigger_url", '').
+        response = call('update_trigger_url', '').
                    params(itemsPerPage: limit,
                           startDate: date_updated,
                           filterOrder: 'asc',
@@ -1805,13 +1862,17 @@
         object_definitions['trigger_output']
       end,
       sample_output: lambda do |_connection, input|
-        call("#{input['object']}_trigger_sample_output", '')
+        if input['object'] == 'event'
+          get('event?dateFilterMode=creation')['events']&.first
+        else
+          get(input['object'])[input['object'].pluralize]&.first
+        end
       end
     }
   },
 
   pick_lists: {
-    Event_types: lambda do |_connection|
+    event_types: lambda do |_connection|
       get('eventtypes')['eventtypes'].
         map { |folder| [folder['label'], folder['value']] }
     end,
@@ -1826,11 +1887,11 @@
         %w[Chinese\ (Simplified) CN]
       ]
     end,
-    Time_zones: lambda do |_connection|
+    time_zones: lambda do |_connection|
       get('timezones')['timezones'].
         map { |folder| [folder['label'], folder['value']] }
     end,
-    Content_type_list: lambda do |_connection|
+    content_type_list: lambda do |_connection|
       [
         %w[All all],
         %w[Experience experience],
@@ -1841,7 +1902,7 @@
         %w[Webpage webpage]
       ]
     end,
-    Event_date_filter_mode_list: lambda do |_connection|
+    event_date_filter_mode_list: lambda do |_connection|
       [
         %w[Good\ after goodafter],
         %w[Updated updated],
@@ -1859,13 +1920,13 @@
         %w[No N]
       ]
     end,
-    Filter_order_list: lambda do |_connection|
+    filter_order_list: lambda do |_connection|
       [
         %w[Asc asc],
         %w[Desc desc]
       ]
     end,
-    Date_filter_mode_list: lambda do |_connection|
+    date_filter_mode_list: lambda do |_connection|
       [
         %w[Last_activity lastActivity]
       ]
