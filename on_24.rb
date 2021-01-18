@@ -9,18 +9,18 @@
         label: 'Client ID',
         optional: false,
         hint: "Click <a href='https://wcc.on24.com/webcast/apitokensdashboard'"\
-          " target='_blank'>here</a> to get client id"
+          " target='_blank'>here</a> to get client id."
       },
       {
         name: 'accessTokenKey',
         optional: false,
-        hint: 'The client access token key'
+        hint: 'The client access token key.'
       },
       {
         name: 'accessTokenSecret',
         control_type: 'password',
         optional: false,
-        hint: 'The client access token secret'
+        hint: 'The client access token secret.'
       }
     ],
     authorization: {
@@ -43,8 +43,8 @@
       [
         { name: 'eventId', type: 'integer', label: 'Event Id' },
         { name: 'title',
-          hint: "Event's name. Limited to less than 251 characters" },
-        { name: 'eventAbstract', hint: "Event's description or summary",
+          hint: "Event's name. Limited to less than 251 characters." },
+        { name: 'eventAbstract', hint: "Event's description or summary.",
           label: 'Event abstract' },
         { name: 'promotionalSummary', label: 'Promotional summary' },
         { name: 'liveStart', type: 'date_time', hint: "Event's start date.",
@@ -84,7 +84,7 @@
             type: 'string',
             control_type: 'text',
             toggle_hint: 'Use custom value',
-            hint: 'Allowed values, E.g. Etc/GMT+12, Pacific/Midway'
+            hint: 'Allowed values, <b>E.g. Etc/GMT+12, Pacific/Midway</b>'
           } },
         { name: 'eventType', control_type: 'select',
           pick_list: :event_types,
@@ -99,7 +99,7 @@
             type: 'string',
             control_type: 'text',
             toggle_hint: 'Use custom value',
-            hint: 'Allowed values, E.g. fav, simulive, ondemand'
+            hint: 'Allowed values, <b>E.g. fav, simulive, ondemand</b>'
           } },
         { name: 'goodAfter', type: 'date_time', label: 'Good after',
           parse_output: lambda do |field|
@@ -127,7 +127,7 @@
           type: 'string',
           label: 'Archive available',
           hint: 'Indicates if the Archive Option is Enabled or Disabled for' \
-            ' this event',
+          ' this event.',
           toggle_hint: 'Select from list',
           toggle_field: {
             name: 'archiveAvailable',
@@ -136,7 +136,7 @@
             type: 'string',
             control_type: 'text',
             toggle_hint: 'Use custom value',
-            hint: 'Allowed values are Y,N'
+            hint: 'Allowed values are <b>Y,N</b>'
           } },
         { name: 'autoArchiveProcessed', type: 'boolean',
           label: 'Auto archive processed' },
@@ -160,7 +160,7 @@
             type: 'string',
             control_type: 'text',
             toggle_hint: 'Use custom value',
-            hint: 'Allowed values, E.g. bg, zh, cs'
+            hint: 'Allowed values, <b>E.g. bg, zh, cs</b>'
           } },
         { name: 'countrycd', control_type: 'select',
           pick_list: :country,
@@ -174,7 +174,7 @@
             type: 'string',
             control_type: 'text',
             toggle_hint: 'Use custom value',
-            hint: 'Allowed values are CN, UK, TW'
+            hint: 'Allowed values are <b>CN, UK, TW</b>'
           } },
         { name: 'campaignCode', label: 'Campaign code' },
         { name: 'sourceEventId', type: 'integer', label: 'Source event Id' },
@@ -375,14 +375,14 @@
         { name: 'addressstreet2', label: 'Address street 2' },
         { name: 'city' },
         { name: 'state' },
-        { name: 'zip', hint: 'Postal Code' },
+        { name: 'zip', hint: 'Postal Code.' },
         { name: 'country' },
         { name: 'homephone', label: 'Home phone' },
         { name: 'workphone', label: 'Work phone' },
         { name: 'fax' },
         { name: 'username' },
         { name: 'exteventusercd', label: 'Ext event user code',
-          hint: 'External code used to identify the user' },
+          hint: 'External code used to identify the user.' },
         { name: 'other' },
         { name: 'notes' },
         { name: 'jobfunction', label: 'Job function' },
@@ -588,7 +588,7 @@
                     type: 'string',
                     control_type: 'text',
                     toggle_hint: 'Use custom value',
-                    hint: 'Allowed values, E.g. fav, simulive, ondemand'
+                    hint: 'Allowed values, <b>E.g. fav, simulive, ondemand</b>'
                   } },
                 { name: 'languageCd', control_type: 'select',
                   pick_list: :languages,
@@ -604,7 +604,7 @@
                     type: 'string',
                     control_type: 'text',
                     toggle_hint: 'Use custom value',
-                    hint: 'Allowed values, E.g. bg, zh, cs'
+                    hint: 'Allowed values, <b>E.g. bg, zh, cs</b>'
                   } },
                 { name: 'timeZone', control_type: 'select',
                   pick_list: :time_zones,
@@ -619,7 +619,8 @@
                     type: 'string',
                     control_type: 'text',
                     toggle_hint: 'Use custom value',
-                    hint: 'Allowed values, E.g. Etc/GMT+12, Pacific/Midway'
+                    hint: 'Allowed values, <b>E.g. Etc/GMT+12,' \
+                    ' Pacific/Midway</b>'
                   } },
                 {
                   name: 'customAccountTag', sticky: true, type: 'integer',
@@ -686,7 +687,7 @@
           pick_list: :boolean_list,
           type: 'string',
           label: 'Include subaccounts',
-          hint: "If 'Yes' then sub-accounts will be included in the response",
+          hint: "If 'Yes' then sub-accounts will be included in the response.",
           toggle_hint: 'Select from list',
           toggle_field: {
             name: 'includeSubaccounts',
@@ -695,11 +696,11 @@
             type: 'string',
             control_type: 'text',
             toggle_hint: 'Use custom value',
-            hint: 'Allowed values are Y,N'
+            hint: 'Allowed values are <b>Y,N</b>'
           } },
         { name: 'subaccounts', label: 'Sub accounts',
           hint: 'Comma separated list of child client ids.' \
-          ' E.g. "22921, 32295"' },
+          ' <b>E.g. "22921, 32295"</b>' },
         { name: 'dateFilterMode', control_type: 'select',
           pick_list: :date_filter_mode_list,
           type: 'string',
@@ -713,7 +714,7 @@
             type: 'string',
             control_type: 'text',
             toggle_hint: 'Use custom value',
-            hint: 'Only allowed value is "lastActivity"'
+            hint: 'Only allowed value is <b>"lastActivity"</b>'
           } },
         { name: 'filterOrder', control_type: 'select',
           pick_list: :filter_order_list,
@@ -727,7 +728,7 @@
             type: 'string',
             control_type: 'text',
             toggle_hint: 'Use custom value',
-            hint: 'Allowed values are asc, desc'
+            hint: 'Allowed values are <b>asc, desc</b>'
           } },
         { name: 'includeInactive', control_type: 'select',
           pick_list: :boolean_list,
@@ -743,13 +744,13 @@
             type: 'string',
             control_type: 'text',
             toggle_hint: 'Use custom value',
-            hint: 'Allowed values are Y, N'
+            hint: 'Allowed values are <b>Y, N</b>'
           } },
         { name: 'contentType', control_type: 'select',
           pick_list: :content_type_list,
           type: 'string',
           label: 'Content type',
-          hint: 'Filter events by contentType',
+          hint: 'Filter events by contentType.',
           toggle_hint: 'Select from list',
           toggle_field: {
             name: 'contentType',
@@ -758,7 +759,7 @@
             type: 'string',
             control_type: 'text',
             toggle_hint: 'Use custom value',
-            hint: 'Allowed values, E.g. experience, gateway, pdf'
+            hint: 'Allowed values, <b>E.g. experience, gateway, pdf</b>'
           } },
         { name: 'itemsPerPage', type: 'integer', hint: 'Number of items to be' \
           ' retrieved per page. If "includesubaccounts = Yes", then only' \
@@ -770,7 +771,7 @@
           pick_list: :boolean_list,
           type: 'string',
           label: 'Exclude subaccounts',
-          hint: "If 'Yes' then sub-accounts will be excluded in the response",
+          hint: "If 'Yes' then sub-accounts will be excluded in the response.",
           toggle_hint: 'Select from list',
           toggle_field: {
             name: 'excludeSubaccounts',
@@ -787,7 +788,8 @@
           pick_list: :boolean_list,
           type: 'string',
           label: 'Exclude live',
-          hint: 'Filter to exclude registrants which register after event ends',
+          hint: 'Filter to exclude registrants which register after' \
+          ' event ends.',
           toggle_hint: 'Select from list',
           toggle_field: {
             name: 'excludeLive',
@@ -796,7 +798,7 @@
             type: 'string',
             control_type: 'text',
             toggle_hint: 'Use custom value',
-            hint: 'Allowed values are Y,N'
+            hint: 'Allowed values are <b>Y, N</b>'
           } },
         { name: 'userStatus', control_type: 'select',
           pick_list: :user_status_list,
@@ -811,7 +813,7 @@
             type: 'string',
             control_type: 'text',
             toggle_hint: 'Use custom value',
-            hint: 'Allowed values are all, any, deleted, forgotten'
+            hint: 'Allowed values are <b>all, any, deleted, forgotten</b>'
           } },
         { name: 'filterforgotten', control_type: 'select',
           pick_list: :boolean_list,
@@ -826,7 +828,7 @@
             type: 'string',
             control_type: 'text',
             toggle_hint: 'Use custom value',
-            hint: 'Allowed values are Y,N'
+            hint: 'Allowed values are <b>Y, N</b>'
           } },
         { name: 'excludeAnonymous', control_type: 'select',
           pick_list: :boolean_list,
@@ -841,7 +843,7 @@
             type: 'string',
             control_type: 'text',
             toggle_hint: 'Use custom value',
-            hint: 'Allowed values are Y,N'
+            hint: 'Allowed values are <b>Y, N</b>'
           } }
       ]
     end,
@@ -864,7 +866,8 @@
                     type: 'string',
                     control_type: 'text',
                     toggle_hint: 'Use custom value',
-                    hint: 'Allowed values, E.g. goodafter, updated, creation'
+                    hint: 'Allowed values, <b>E.g. goodafter,' \
+                    ' updated, creation</b>'
                   } }])
     end,
     search_registrant_input: lambda do |_input|
@@ -881,10 +884,10 @@
         ignored('includeSubaccounts', 'subaccounts', 'filterOrder',
                 'includeInactive', 'contentType', 'itemsPerPage', 'pageOffset',
                 'excludeLive').
-        concat([{ name: 'email', hint: 'Email registrant filter',
+        concat([{ name: 'email', hint: 'Email registrant filter.',
                   control_type: 'email' },
                 { name: 'noshow',
-                  hint: 'Registrants who did not show up for the event' },
+                  hint: 'Registrants who did not show up for the event.' },
                 { name: 'eventId', optional: false, label: 'Event Id' }])
     end,
     search_event_attendee_input: lambda do |_input|
@@ -931,17 +934,17 @@
     end,
     get_event_input: lambda do |_input|
       [{ name: 'eventId', type: 'integer', optional: false,
-         hint: 'Id of the particular event', label: 'Event Id' }]
+         hint: 'Id of the particular event.', label: 'Event Id' }]
     end,
     get_registrant_input: lambda do |_input|
       [{ name: 'email', optional: false, control_type: 'email',
-         hint: 'Unique email id used in the registration' },
+         hint: 'Unique email id used in the registration.' },
        { name: 'partnerref', label: 'Partner reference',
-         hint: 'Filter by partner reference. E.g. EM' }]
+         hint: 'Filter by partner reference. <b>E.g. EM</b>' }]
     end,
     get_attendee_input: lambda do |_input|
       [{ name: 'email', optional: false, control_type: 'email',
-         hint: 'Unique email id used in the registration' }]
+         hint: 'Unique email id used in the registration.' }]
     end,
     get_event_output: lambda do |_input|
       call('event_level_schema', '').
@@ -999,7 +1002,8 @@
     end,
     update_trigger_url: lambda do |input|
       if input['object'] == 'event'
-        get('event?dateFilterMode=modified')
+        get('event?dateFilterMode=modified&filterOrder=asc&
+             includesubaccounts=Y')
       else
         get('registrant?dateFilterMode=lastActivity')
       end
@@ -1196,9 +1200,9 @@
     copy_event_input: {
       fields: lambda do |_connection, _config_fields|
         call('event_management_schema', '').
+          concat([{ name: 'eventid', optional: false, type: 'integer' }]).
           required('liveStart', 'liveDuration').
-          ignored('eventAbstract').
-          concat([{ name: 'eventid', optional: false, type: 'integer' }])
+          ignored('eventAbstract')
       end
     },
     copy_event_output: {
@@ -1208,16 +1212,17 @@
     },
     trigger_input: {
       fields: lambda do |_connection, _config_fields|
-        { name: 'since', type: 'date_time', hint: 'When you start recipe for' \
+        [{ name: 'since', type: 'date_time', hint: 'When you start recipe for' \
         ' the first time, it picks up trigger events from this specified date' \
-        ' and time. Leave empty to get records created or updated one hour ago',
-          sticky: true,
-          render_input: lambda do |field|
-            field&.(:to_s)
-          end,
-          parse_output: lambda do |field|
-            field&.(:to_s)
-          end }
+        ' and time. Leave empty to get records created or updated' \
+        ' one hour ago.',
+           sticky: true,
+           render_input: lambda do |field|
+             field&.(:to_s)
+           end,
+           parse_output: lambda do |field|
+             field&.(:to_s)
+           end }]
       end
     },
     trigger_output: {
@@ -1439,7 +1444,7 @@
           optional: false,
           control_type: 'select',
           pick_list: :search_records_object_list,
-          hint: 'Select any ON24 object, e.g. Registrant'
+          hint: 'Select any ON24 object, <b>e.g. Registrant.</b>'
         }
       ],
       input_fields: lambda do |object_definitions|
@@ -1480,7 +1485,7 @@
           optional: false,
           control_type: 'select',
           pick_list: :get_records_object_list,
-          hint: 'Select any ON24 object, e.g. Registrant'
+          hint: 'Select any ON24 object, <b>e.g. Registrant.</b>'
         }
       ],
       input_fields: lambda do |object_definitions|
@@ -1492,18 +1497,15 @@
         after_error_response(/.*/) do |code, _body, _header, message|
           error(" #{code}: #{message}")
         end
-        response[input['object']] || response
+        response = response[input['object']] || response
         call('format_response_data', response.presence)
       end,
       output_fields: lambda do |object_definitions|
         object_definitions['get_output']
       end,
       sample_output: lambda do |_connection, input|
-        if input['object'] == 'event'
-          get('event?dateFilterMode=creation')['events']&.first
-        else
-          get(input['object'])[input['object'].pluralize]&.first
-        end
+        get("#{input['object']}?includeSubaccounts=Y&
+            itemsPerPage=1")[input['object'].pluralize][0]
       end
     },
     create_object:
@@ -1528,7 +1530,7 @@
           optional: false,
           control_type: 'select',
           pick_list: :object_list,
-          hint: 'Select any ON24 object, e.g. Registrant'
+          hint: 'Select any ON24 object, <b>e.g. Registrant.</b>'
         }
       ],
       input_fields: lambda do |object_definitions|
@@ -1541,7 +1543,7 @@
           after_error_response(/.*/) do |code, _body, _header, message|
             error("#{code}: #{message}")
           end
-        response['wccevent'] || response
+        response = response['wccevent'] || response
         call('format_response_data', response.presence)
       end,
       output_fields: lambda do |object_definitions|
@@ -1551,7 +1553,8 @@
         if input['object'] == 'event'
           call('event_management_sample_output', '')
         else
-          get('registrant')['registrants']&.first
+          get("#{input['object']}?includeSubaccounts=Y&
+          itemsPerPage=1")[input['object'].pluralize][0]
         end
       end
     },
@@ -1570,24 +1573,24 @@
           optional: false,
           control_type: 'select',
           pick_list: :object_list,
-          hint: 'Select any ON24 object, e.g. Registrant'
+          hint: 'Select any ON24 object, <b>e.g. Registrant.</b>'
         }
       ],
       input_fields: lambda do |object_definitions|
         object_definitions['update_input']
       end,
       execute: lambda do |_connection, input|
-        response = if input['object'] == 'registrant'
-                     patch(call('execute_url', input))
-                   else
-                     put(call('execute_url', input))
-                   end
-        response = response.payload(input.except('object', 'email', 'eventId')).
+        request = if input['object'] == 'registrant'
+                    patch(call('execute_url', input))
+                  else
+                    put(call('execute_url', input))
+                  end
+        response = request.payload(input.except('object', 'email', 'eventId')).
                    request_format_www_form_urlencoded&.
           after_error_response(/.*/) do |code, _body, _header, message|
             error("#{code}: #{message}")
           end
-        response['wccevent'] || response
+        response = response['wccevent'] || response
         call('format_response_data', response.presence)
       end,
       output_fields: lambda do |object_definitions|
@@ -1596,10 +1599,13 @@
       sample_output: lambda do |_connection, input|
         if input['object'] == 'event'
           call('event_management_sample_output', '')
-        else
+        elsif input['object'] == 'registrant'
           { 'updatedregistrants': [
             { '__name': '399133565' }
           ] }
+        else
+          get("#{input['object']}?includeSubaccounts=Y&
+          itemsPerPage=1")[input['object'].pluralize][0]
         end
       end
     },
@@ -1619,7 +1625,7 @@
                    after_error_response(/.*/) do |code, _body, _header, message|
                      error("#{code}: #{message}")
                    end
-        response['wccevent']
+        response = response['wccevent']
         call('format_response_data', response.presence)
       end,
       output_fields: lambda do |object_definitions|
@@ -1646,7 +1652,7 @@
         {
           name: 'action_name',
           hint: "Give this action you're building a descriptive name, e.g. " \
-          'create record, get record',
+          'create record, get record.',
           default: 'Custom action',
           optional: false,
           schema_neutral: true
@@ -1654,7 +1660,7 @@
         {
           name: 'verb',
           label: 'Method',
-          hint: 'Select HTTP method of the request',
+          hint: 'Select HTTP method of the request.',
           optional: false,
           control_type: 'select',
           pick_list: %w[get post put delete patch].
@@ -1761,7 +1767,7 @@
           optional: false,
           control_type: 'select',
           pick_list: :trigger_object_list,
-          hint: 'Select any ON24 object, e.g. Registrant'
+          hint: 'Select any ON24 object, <b>e.g. Registrant.</b>'
         }
       ],
       input_fields: lambda do |object_definitions|
@@ -1769,11 +1775,7 @@
       end,
       poll: lambda do |_connection, input, closure|
         closure ||= {}
-        limit = if input['object'] == 'lead'
-                  50
-                else
-                  100
-                end
+        limit = input['object'] == 'lead' ? 50 : 100
         page_off_set = closure['page_off_set'] || 0
         date_created = closure['date_created'] || input['since'] || 1.hour.ago
         response = call('trigger_url', '').
@@ -1781,9 +1783,12 @@
                           startDate: date_created,
                           pageOffset: page_off_set)
         records = response[input['object'].pluralize]
+        if input['object'] == 'registrant'
+          records = records.sort_by { |value| value['createtimestamp'] }
+        end
         closure = if (has_more = records&.size&. >= limit)
                     if input['object'] == 'lead'
-                      { 'date_created': Time.now,
+                      { 'date_created': date_created,
                         'page_off_set': page_off_set + 1 }
                     else
                       { 'date_created': records&.dig(-1, 'createtimestamp') ||
@@ -1805,17 +1810,14 @@
         }
       end,
       dedup: lambda do |event|
-        "#{event['eventid']} @@ #{event['eventuserid']} @@ #{event['email']}"
+        "#{event['eventid']}@@#{event['eventuserid']} || #{event['email']}"
       end,
       output_fields: lambda do |object_definitions|
         object_definitions['trigger_output']
       end,
       sample_output: lambda do |_connection, input|
-        if input['object'] == 'event'
-          get('event?dateFilterMode=creation')['events']&.first
-        else
-          get(input['object'])[input['object'].pluralize]&.first
-        end
+        get("#{input['object']}?includeSubaccounts=Y&
+            itemsPerPage=1")[input['object'].pluralize][0]
       end
     },
     new_or_update_record:
@@ -1833,7 +1835,7 @@
           optional: false,
           control_type: 'select',
           pick_list: :object_list,
-          hint: 'Select any ON24 object, e.g. Registrant'
+          hint: 'Select any ON24 object, <b>e.g. Registrant.</b>'
         }
       ],
       input_fields: lambda do |object_definitions|
@@ -1847,13 +1849,13 @@
         response = call('update_trigger_url', '').
                    params(itemsPerPage: limit,
                           startDate: date_updated,
-                          filterOrder: 'asc',
-                          includesubaccounts: 'Y',
                           pageOffset: page_off_set)
         records = response[input['object'].pluralize]
+        if input['object'] == 'registrant'
+          records = records.sort_by { |value| value['lastmodified'] }
+        end
         closure = if (has_more = records&.size&. >= limit)
-                    { 'date_updated': records&.dig(-1, 'lastmodified') ||
-                      records&.dig(-1, 'lastactivity'),
+                    { 'date_updated': date_updated,
                       'page_off_set': page_off_set + 1 }
                   else
                     { 'date_updated': records&.dig(-1, 'lastmodified') ||
@@ -1867,18 +1869,15 @@
         }
       end,
       dedup: lambda do |event|
-        "#{event['eventid']} @@ #{event['eventuserid']} @@
-        #{event['lastmodified']} @@ #{event['lastactivity']}"
+        "#{event['eventid']}@@#{event['eventuserid']}@@
+        #{event['lastmodified']} || #{event['lastactivity']}"
       end,
       output_fields: lambda do |object_definitions|
         object_definitions['trigger_output']
       end,
       sample_output: lambda do |_connection, input|
-        if input['object'] == 'event'
-          get('event?dateFilterMode=creation')['events']&.first
-        else
-          get(input['object'])[input['object'].pluralize]&.first
-        end
+        get("#{input['object']}?includeSubaccounts=Y&
+            itemsPerPage=1")[input['object'].pluralize][0]
       end
     }
   },
@@ -1940,7 +1939,7 @@
     end,
     date_filter_mode_list: lambda do |_connection|
       [
-        %w[Last_activity lastActivity]
+        %w[Last\ activity lastActivity]
       ]
     end,
     user_status_list: lambda do |_connection|
