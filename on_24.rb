@@ -1603,9 +1603,6 @@
           { 'updatedregistrants': [
             { '__name': '399133565' }
           ] }
-        else
-          get("#{input['object']}?includeSubaccounts=Y&
-          itemsPerPage=1")[input['object'].pluralize][0]
         end
       end
     },
@@ -1758,7 +1755,7 @@
       subtitle: 'Triggers when new record created',
       description: lambda do |_connection, create_object_list|
         "New <span class='provider'>" \
-        "#{create_object_list[:object] || 'records'}</span> " \
+        "#{create_object_list[:object] || 'record'}</span> " \
         'in <span class="provider">ON24</span>'
       end,
       config_fields: [
@@ -1778,30 +1775,25 @@
         limit = input['object'] == 'lead' ? 50 : 100
         page_off_set = closure['page_off_set'] || 0
         date_created = closure['date_created'] || input['since'] || 1.hour.ago
+        time_now = Time.now
         response = call('trigger_url', '').
                    params(itemsPerPage: limit,
                           startDate: date_created,
                           pageOffset: page_off_set)
         records = response[input['object'].pluralize]
-        if input['object'] == 'registrant'
-          records = records.sort_by { |value| value['createtimestamp'] }
-        end
         closure = if (has_more = records&.size&. >= limit)
-                    if input['object'] == 'lead'
-                      { 'date_created': date_created,
-                        'page_off_set': page_off_set + 1 }
-                    else
-                      { 'date_created': records&.dig(-1, 'createtimestamp') ||
-                        date_created, 'page_off_set': page_off_set + 1 }
-                    end
+                    { 'date_created': date_created,
+                      'page_off_set': page_off_set + 1 }
                   else
-                    if input['object'] == 'lead'
-                      { 'date_created': Time.now,
-                        'page_off_set': 0 }
-                    else
-                      { 'date_created': records&.dig(-1, 'createtimestamp') ||
-                        date_created, 'page_off_set': 0 }
+                    if input['object'] == 'registrant'
+                      records = records.sort_by do |value|
+                        value['createtimestamp']
+                      end
                     end
+                    { 'date_created':
+                      input['object'] == 'lead' ? time_now : records&.
+                      dig(-1, 'createtimestamp') || date_created,
+                      'page_off_set': 0 }
                   end
         {
           events: records,
