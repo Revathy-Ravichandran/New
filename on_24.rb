@@ -8,19 +8,26 @@
         name: 'clientId',
         label: 'Client ID',
         optional: false,
-        hint: "Click <a href='https://wcc.on24.com/webcast/apitokensdashboard'"\
-          " target='_blank'>here</a> to get client id."
+        hint: 'In Elite, you can find your Client ID under' \
+        '<b>Analytics</b> => <b>API Dashboard</b>. It is recommended to' \
+        'provision a new API Access token for Workato.'
       },
       {
         name: 'accessTokenKey',
+        label: 'Access token key',
         optional: false,
-        hint: 'The client access token key.'
+        hint: 'In Elite, you can find your Access token key under' \
+        '<b>Analytics</b> => <b>API Dashboard</b>. It is recommended to' \
+        'provision a new API Access token for Workato.'
       },
       {
         name: 'accessTokenSecret',
+        label: 'Access token secret',
         control_type: 'password',
         optional: false,
-        hint: 'The client access token secret.'
+        hint: 'In Elite, you can find your Access token secret under' \
+        '<b>Analytics</b> => <b>API Dashboard</b>. It is recommended to' \
+        'provision a new API Access token for Workato.'
       }
     ],
     authorization: {
@@ -561,16 +568,6 @@
              label: 'Widget submitted timestamp' }] }
       ]
     end,
-    lead_schema: lambda do |_input|
-      [
-        { name: 'email' },
-        { name: 'businessinterests', label: 'Business interests',
-          type: 'array', of: 'object', properties:
-          [{ name: '__name', label: 'Name' }] },
-        { name: 'engagementlevel', label: 'Engagement level' },
-        { name: 'userprofileurl', label: 'User profile URL' }
-      ]
-    end,
     create_event_input: lambda do |_input|
       call('event_management_schema', '').
         required('title', 'liveStart', 'liveDuration').
@@ -897,11 +894,6 @@
                 'excludeLive', 'excludeSubaccounts').
         concat([{ name: 'eventId', optional: false, label: 'Event Id' }])
     end,
-    search_lead_input: lambda do |_input|
-      call('search_records_input', '').
-        only('startDate', 'endDate', 'dateInterval', 'dateIntervalOffset',
-             'dateIntervalTimezone', 'pageOffset', 'itemsPerPage')
-    end,
     search_event_output: lambda do |_input|
       [{ name: 'events', type: 'array', of: 'object', properties:
         call('event_level_schema', '').
@@ -927,10 +919,6 @@
       { name: 'attendees', type: 'array', of: 'object', properties:
         call('attendee_schema', '').
           ignored('clientid') }
-    end,
-    search_lead_output: lambda do |_input|
-      { name: 'leads', type: 'array', of: 'object', properties:
-        call('lead_schema', '') }
     end,
     get_event_input: lambda do |_input|
       [{ name: 'eventId', type: 'integer', optional: false,
@@ -976,9 +964,6 @@
              'lastactivity', 'ipaddress', 'browser', 'emailformat',
              'engagementprediction', 'sourceeventid', 'userstatus')
     end,
-    lead_trigger_output: lambda do |_input|
-      call('lead_schema', '')
-    end,
     execute_url: lambda do |input|
       if input['object'] == 'registrant' && input['eventId'].present? ||
          input['object'] == 'event_registrant'
@@ -1004,7 +989,7 @@
       if input['object'] == 'event'
         get('event?dateFilterMode=modified&filterOrder=asc&
              includesubaccounts=Y')
-      else
+      elsif input['object'] == 'registrant'
         get('registrant?dateFilterMode=lastActivity')
       end
     end,
@@ -1429,15 +1414,18 @@
 
   actions:
   {
-    search_objects:
+    search_records:
     {
-      title: 'Search objects',
-      subtitle: 'Search objects in ON24',
+      title: 'Search records',
+      subtitle: 'Searches for records, <b>e.g. event, registrant</b> in ON24',
       description: lambda do |_connection, search_object_list|
         "Search <span class='provider'>" \
         "#{search_object_list[:object]&.pluralize || 'records'}</span> " \
         'in <span class="provider">ON24</span>'
       end,
+      help: 'Search for record in ON24. First select the record type to' \
+      ' search, then fill up the specific search fields for the record' \
+      ' selected.',
       config_fields: [
         {
           name: 'object',
@@ -1470,22 +1458,26 @@
         end
       end
     },
-    get_object:
+    get_record:
     {
-      title: 'Get object',
-      subtitle: 'Get object in ON24',
+      title: 'Get record',
+      subtitle: 'Retrieves a specific record,' \
+      '<b>e.g. event, registrant</b> in ON24',
       description: lambda do |_connection, get_object_list|
         "Get <span class='provider'>" \
         "#{get_object_list[:object] || 'record'}</span> " \
         'in <span class="provider">ON24</span> '
       end,
+      help: 'Retrieves information for a specific record in ON24. First' \
+       ' select the record type to search, then fill up the specific search' \
+       ' fields for the record selected.',
       config_fields: [
         {
           name: 'object',
           optional: false,
           control_type: 'select',
           pick_list: :get_records_object_list,
-          hint: 'Select any ON24 object, <b>e.g. Registrant.</b>'
+          hint: 'Select any ON24 Record object, <b>e.g. Registrant.</b>'
         }
       ],
       input_fields: lambda do |object_definitions|
@@ -1508,10 +1500,10 @@
             itemsPerPage=1")[input['object'].pluralize][0]
       end
     },
-    create_object:
+    create_record:
     {
-      title: 'Create object',
-      subtitle: 'Create object in ON24',
+      title: 'Create record',
+      subtitle: 'Creates a record, <b>e.g. event, registrant</b> in ON24',
       description: lambda do |_connection, create_object_list|
         "Create <span class='provider'>" \
         "#{create_object_list[:object] || 'record'}</span> " \
@@ -1522,6 +1514,9 @@
           'If a field is configured as "required" on the registration page,' \
           ' you must pass in a valid value, or the request will not be' \
           ' successful.'
+        else
+          'Creates a record in On24. First select the record type to create,' \
+          'then fill up the specific input fields for the record selected.'
         end
       end,
       config_fields: [
@@ -1530,7 +1525,7 @@
           optional: false,
           control_type: 'select',
           pick_list: :object_list,
-          hint: 'Select any ON24 object, <b>e.g. Registrant.</b>'
+          hint: 'Select any ON24 Record object, <b>e.g. Registrant.</b>'
         }
       ],
       input_fields: lambda do |object_definitions|
@@ -1558,22 +1553,24 @@
         end
       end
     },
-    update_object:
+    update_record:
     {
-      title: 'Update object',
-      subtitle: 'Update object in ON24 by ID',
+      title: 'Update record',
+      subtitle: 'Updates a record, <b>e.g. event, registrant</b> in ON24',
       description: lambda do |_connection, update_object_list|
         "Update <span class='provider'>" \
         "#{update_object_list[:object] || 'record'}</span> " \
-        'in <span class="provider">ON24</span> by ID'
+        'in <span class="provider">ON24</span>'
       end,
+      help: 'Updates a record in ON24. First select the record type to' \
+      'update, then fill up the specific input fields for the record selected.',
       config_fields: [
         {
           name: 'object',
           optional: false,
           control_type: 'select',
           pick_list: :object_list,
-          hint: 'Select any ON24 object, <b>e.g. Registrant.</b>'
+          hint: 'Select any ON24 Record object, <b>e.g. Registrant.</b>'
         }
       ],
       input_fields: lambda do |object_definitions|
@@ -1609,9 +1606,10 @@
     copy_event:
     {
       title: 'Copy event',
-      subtitle: 'Copy event in ON24 by ID',
+      subtitle: 'Duplicates a specified event in ON24',
       description: "Copy <span class='provider'>event</span> " \
-        "in <span class='provider'>ON24</span> by ID",
+        "in <span class='provider'>ON24</span>",
+      help: 'Copies an event in ON24.',
       input_fields: lambda do |object_definitions|
         object_definitions['copy_event_input']
       end,
@@ -1752,19 +1750,24 @@
     new_record:
     {
       title: 'New record',
-      subtitle: 'Triggers when new record created',
+      subtitle: 'Triggers when a new record <b>eg. Event, Registrant</b> is ' \
+      'found in ON24',
       description: lambda do |_connection, create_object_list|
         "New <span class='provider'>" \
         "#{create_object_list[:object] || 'record'}</span> " \
         'in <span class="provider">ON24</span>'
       end,
+      help: 'Triggers when a new record is found in ON24. First select the' \
+      ' type of record and when we should retrospectively pull records from.' \
+      ' When this recipe is started, this trigger will pull records from the' \
+      ' specified date before checking every 5 minutes for new records.',
       config_fields: [
         {
           name: 'object',
           optional: false,
           control_type: 'select',
-          pick_list: :trigger_object_list,
-          hint: 'Select any ON24 object, <b>e.g. Registrant.</b>'
+          pick_list: :object_list,
+          hint: 'Select any ON24 Record object, <b>e.g. Registrant.</b>'
         }
       ],
       input_fields: lambda do |object_definitions|
@@ -1772,10 +1775,9 @@
       end,
       poll: lambda do |_connection, input, closure|
         closure ||= {}
-        limit = input['object'] == 'lead' ? 50 : 100
+        limit = 100
         page_off_set = closure['page_off_set'] || 0
         date_created = closure['date_created'] || input['since'] || 1.hour.ago
-        time_now = Time.now
         response = call('trigger_url', '').
                    params(itemsPerPage: limit,
                           startDate: date_created,
@@ -1790,10 +1792,8 @@
                         value['createtimestamp']
                       end
                     end
-                    { 'date_created':
-                      input['object'] == 'lead' ? time_now : records&.
-                      dig(-1, 'createtimestamp') || date_created,
-                      'page_off_set': 0 }
+                    { 'date_created': records&.dig(-1, 'createtimestamp') ||
+                      date_created, 'page_off_set': 0 }
                   end
         {
           events: records,
@@ -1802,7 +1802,7 @@
         }
       end,
       dedup: lambda do |event|
-        "#{event['eventid']}@@#{event['eventuserid']} || #{event['email']}"
+        "#{event['eventid']}@@#{event['eventuserid']}"
       end,
       output_fields: lambda do |object_definitions|
         object_definitions['trigger_output']
@@ -1814,20 +1814,26 @@
     },
     new_or_update_record:
     {
-      title: 'New or Update record',
-      subtitle: 'Triggers when new record created or updated',
+      title: 'New/updated record',
+      subtitle: 'Triggers when a new/updated record ' \
+      '<b>eg. Event, Registrant</b> is found in ON24',
       description: lambda do |_connection, create_object_list|
-        "New/Update <span class='provider'>" \
-        "#{create_object_list[:object] || 'records'}</span> " \
+        "New/updated <span class='provider'>" \
+        "#{create_object_list[:object] || 'record'}</span> " \
         'in <span class="provider">ON24</span>'
       end,
+      help: 'Triggers when a record is created of updated in ON24. First' \
+      'select the type of record and when we should retrospectively pull' \
+      'records from. When this recipe is started, this trigger will pull' \
+      'records from the specified date before checking every 5 minutes' \
+      'for new records.',
       config_fields: [
         {
           name: 'object',
           optional: false,
           control_type: 'select',
           pick_list: :object_list,
-          hint: 'Select any ON24 object, <b>e.g. Registrant.</b>'
+          hint: 'Select any ON24 Record object, <b>e.g. Registrant.</b>'
         }
       ],
       input_fields: lambda do |object_definitions|
@@ -1843,13 +1849,15 @@
                           startDate: date_updated,
                           pageOffset: page_off_set)
         records = response[input['object'].pluralize]
-        if input['object'] == 'registrant'
-          records = records.sort_by { |value| value['lastmodified'] }
-        end
         closure = if (has_more = records&.size&. >= limit)
                     { 'date_updated': date_updated,
                       'page_off_set': page_off_set + 1 }
                   else
+                    if input['object'] == 'registrant'
+                      records = records.sort_by do |value|
+                        value['lastmodified']
+                      end
+                    end
                     { 'date_updated': records&.dig(-1, 'lastmodified') ||
                       records&.dig(-1, 'lastactivity') ||
                       date_updated, 'page_off_set': 0 }
@@ -1862,7 +1870,7 @@
       end,
       dedup: lambda do |event|
         "#{event['eventid']}@@#{event['eventuserid']}@@
-        #{event['lastmodified']} || #{event['lastactivity']}"
+        #{event['lastmodified']}@@#{event['lastactivity']}"
       end,
       output_fields: lambda do |object_definitions|
         object_definitions['trigger_output']
@@ -1942,13 +1950,6 @@
         %w[All all]
       ]
     end,
-    trigger_object_list: lambda do |_connection|
-      [
-        %w[Event event],
-        %w[Registrant registrant],
-        %w[Lead lead]
-      ]
-    end,
     object_list: lambda do |_connection|
       [
         %w[Event event],
@@ -1961,8 +1962,7 @@
         %w[Registrant registrant],
         %w[Attendee attendee],
         %w[Specific\ event\ registrant event_registrant],
-        %w[Specific\ event\ attendee event_attendee],
-        %w[Lead lead]
+        %w[Specific\ event\ attendee event_attendee]
       ]
     end,
     get_records_object_list: lambda do |_connection|
